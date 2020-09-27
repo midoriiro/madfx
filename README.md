@@ -11,8 +11,6 @@ An Android application to handle your Bluetooth devices audio configuration (vol
 
  - [ ] Documentations
  - [ ] Unit tests
-	 - [ ] List of available audio codecs
-	 - [ ] Current set audio codec
  - [ ] Device list view
      - [x] Retrieve paired devices
         - [ ] Background service when a new device is paired while the app is running ?
@@ -22,6 +20,8 @@ An Android application to handle your Bluetooth devices audio configuration (vol
         - [ ] Find a solution to differentiate earbuds and headphones
      - [ ] Find a solution to retrieve connected devices battery level (when BLE Gatt service is not available)
      - [ ] Find a solution to retrieve devices audio codecs (bypass hidden API ? Not a classy solution but maybe the only one)
+        - [ ] List of available audio codecs
+        - [ ] Retrieve current set audio codec
 	 - [ ] Sort devices based on connection and playing state without refill the entire RecyclerView dataset
 	 - [ ] Able to (dis)connect a device
 	 - [ ] Able to (un)mute a device
