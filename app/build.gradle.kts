@@ -70,13 +70,18 @@ dependencies {
     testImplementation("junit:junit:4.12")
 }
 
+repositories {
+	mavenCentral()
+}
+
 tasks.register<GenerateGattClasses>("generateGattClasses")
 {
     this.group = "Generate"
     this.description = "Generate Bluetooth Gatt attributes classes"
     this.packageName = "midoriiro.madfx.bluetooth.specifications"
-    this.outputPath = "src/main/java"
+    this.outputPath = "src/main/kotlin"
 }
-repositories {
-	mavenCentral()
+
+android.sourceSets.all {
+    java.srcDir("src/$name/kotlin")
 }
