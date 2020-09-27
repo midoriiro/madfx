@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Visualizer">
+        <attr name="normalize" format="boolean"/>
+        <attr name="color" format="color"/>
+        <attr name="opacity" format="float"/>
+        <attr name="density" format="float"/>
+        <attr name="gap" format="integer"/>
+        <attr name="smooth" format="integer"/>
+        <attr name="radius" format="dimension"/>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,47 @@
+<div align="center">
+	<img src="./images/logo.jpg" alt="logo" width="512"/>
+</div>
+
+# MadFx
+An Android application to handle your Bluetooth devices audio configuration (volumes, equalization and some effects)
+
+<img src="./images/devices_list.png" alt="device_list" width="256"/>
+
+## Todo list
+
+ - [ ] Documentations
+ - [ ] Unit tests
+	 - [ ] List of available audio codecs
+	 - [ ] Current set audio codec
+ - [ ] Device list view
+     - [x] Retrieve paired devices
+        - [ ] Background service when a new device is paired while the app is running ?
+     - [x] Retrieve device connection and playing state
+     - [x] Retrieve audio device type
+        - [ ] Change icons
+        - [ ] Find a solution to differentiate earbuds and headphones
+     - [ ] Find a solution to retrieve connected devices battery level (when BLE Gatt service is not available)
+     - [ ] Find a solution to retrieve devices audio codecs (bypass hidden API ? Not a classy solution but maybe the only one)
+	 - [ ] Sort devices based on connection and playing state without refill the entire RecyclerView dataset
+	 - [ ] Able to (dis)connect a device
+	 - [ ] Able to (un)mute a device
+ - [ ] Notification view
+ - [ ] Equalizer view
+	 - [ ] Parametric view
+	 - [ ] Curve view
+	 - [ ] Find a solution to handle 10+ bands frequencies independent of the device 
+ - [ ] Volumes view
+	 - [ ] Media
+	 - [ ] Ring/notification/system
+	 - [ ] Alarm
+ - [ ] Effects view
+	 - [ ] Virtualization
+	 - [ ] Loudness
+	 - [ ] Bass boost
+ - [ ] Presets (Normal, Rock, Jazz, ...)
+ - [ ] Profiles management
+	 - [ ] Store profile locally
+	 - [ ] Store profile on the cloud (sync with stored local profiles)
+	 - [ ] Keep track when Bluetooth device is unpaired (mean still stored in case of the device will be paired again)
+	 - [ ] Link profile across Bluetooth devices (use case, JBL Connect+)
+	 - [ ] Background service to handle device (de)connection and activate the proper profile (volumes, effects, ...)

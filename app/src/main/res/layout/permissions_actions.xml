@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        android:divider="@drawable/list_empty_divider">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_bluetooth_permission"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:cardForegroundColor="@android:color/transparent"
+            app:strokeColor="@color/colorAccent"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <com.mikepenz.iconics.view.IconicsImageView
+                    android:id="@+id/icon_bluetooth_service"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:iiv_color="@android:color/secondary_text_dark"
+                    app:iiv_icon="cmd-bluetooth"
+                    app:iiv_size="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text_bluetooth_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp"
+                    android:gravity="center_vertical"
+                    android:text="Bluetooth"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/state_bluetooth_service"
+                    app:layout_constraintStart_toEndOf="@id/icon_bluetooth_service"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/state_bluetooth_service"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.mikepenz.iconics.view.IconicsImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:iiv_color="@color/colorAccent"
+                        app:iiv_icon="cmd-check"
+                        app:iiv_size="16dp" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_location_service"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:cardForegroundColor="@android:color/transparent"
+            app:strokeColor="@color/colorAccent"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <com.mikepenz.iconics.view.IconicsImageView
+                    android:id="@+id/icon_location_service"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:iiv_color="@android:color/secondary_text_dark"
+                    app:iiv_icon="cmd-map-marker"
+                    app:iiv_size="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text_location_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp"
+                    android:gravity="center_vertical"
+                    android:text="Location"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/state_location_service"
+                    app:layout_constraintStart_toEndOf="@id/icon_location_service"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/state_location_service"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.mikepenz.iconics.view.IconicsImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:iiv_color="@color/colorAccent"
+                        app:iiv_icon="cmd-check"
+                        app:iiv_size="16dp" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_location_permission"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:cardForegroundColor="@android:color/transparent"
+            app:strokeColor="@color/colorAccent"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <RelativeLayout
+                    android:id="@+id/icon_location_permission"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.mikepenz.iconics.view.IconicsImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:iiv_color="@android:color/secondary_text_dark"
+                        app:iiv_icon="cmd-map-marker"
+                        app:iiv_size="24dp"/>
+
+                    <com.mikepenz.iconics.view.IconicsImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        app:iiv_color="@android:color/secondary_text_dark"
+                        app:iiv_icon="cmd-lock"
+                        app:iiv_size="14dp"
+                        app:iiv_contour_width="2dp"
+                        app:iiv_contour_color="@android:color/background_dark"
+                        />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/text_location_permission"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp"
+                    android:gravity="center_vertical"
+                    android:text="Location Access"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/state_location_permission"
+                    app:layout_constraintStart_toEndOf="@id/icon_location_permission"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/state_location_permission"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.mikepenz.iconics.view.IconicsImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:iiv_color="@color/colorAccent"
+                        app:iiv_icon="cmd-check"
+                        app:iiv_size="16dp" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_record_audio_permission"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:cardForegroundColor="@android:color/transparent"
+            app:strokeColor="@color/colorAccent"
+            app:strokeWidth="1dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <RelativeLayout
+                    android:id="@+id/icon_record_audio_permission"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.mikepenz.iconics.view.IconicsImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:iiv_color="@android:color/secondary_text_dark"
+                        app:iiv_icon="cmd-microphone"
+                        app:iiv_size="24dp"/>
+
+                    <com.mikepenz.iconics.view.IconicsImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        app:iiv_color="@android:color/secondary_text_dark"
+                        app:iiv_icon="cmd-lock"
+                        app:iiv_size="14dp"
+                        app:iiv_contour_width="2dp"
+                        app:iiv_contour_color="@android:color/background_dark"
+                        />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/text_record_audio_permission"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp"
+                    android:gravity="center_vertical"
+                    android:text="Record Audio Access"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/state_record_audio_permission"
+                    app:layout_constraintStart_toEndOf="@id/icon_record_audio_permission"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/state_record_audio_permission"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.mikepenz.iconics.view.IconicsImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:iiv_color="@color/colorAccent"
+                        app:iiv_icon="cmd-check"
+                        app:iiv_size="16dp" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</layout>

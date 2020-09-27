@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="model"
+            type="midoriiro.madfx.bluetooth.models.BluetoothDeviceViewModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/device"
+        android:enabled="@{model.isConnected()}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <!-- connection state -->
+            <com.mikepenz.iconics.view.IconicsImageView
+                android:id="@+id/connection_state"
+                android:enabled="@{model.isConnected()}"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:iiv_icon="@{model.isConnected() ? `cmd-bluetooth-connect` : `cmd-bluetooth-off`}"
+                app:iiv_size="24dp"
+                app:iiv_color="@drawable/stateful_icon"/>
+
+            <!-- playing state -->
+            <com.mikepenz.iconics.view.IconicsImageView
+                android:id="@+id/playing_state"
+                android:enabled="@{model.isPlaying()}"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/image_layout"
+                app:iiv_icon="@{model.isPlaying() ? `cmd-volume-vibrate` : `cmd-volume-low`}"
+                app:iiv_size="24dp"
+                app:iiv_color="@drawable/stateful_icon"/>
+
+            <!-- codec -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                app:cardElevation="8dp"
+                app:cardCornerRadius="4dp"
+                app:layout_constraintBottom_toBottomOf="@id/image_layout"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/codec"
+                    android:enabled="@{model.isConnected()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="@{model.codec}"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@drawable/stateful_card_view_text"
+                    tools:text="SBC" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- battery -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="@+id/image_layout"
+                app:layout_constraintTop_toTopOf="@+id/image_layout">
+
+                <com.mikepenz.iconics.view.IconicsImageView
+                    android:id="@+id/battery_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:rotation="90"
+                    app:iiv_color="@color/colorAccent"
+                    app:iiv_icon="cmd-battery"
+                    app:iiv_size="24dp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/battery_percentage"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:gravity="center_vertical|right"
+                    android:textSize="8sp"
+                    android:textColor="@color/material_on_surface_disabled"
+                    android:text="@{model.batteryLevel + `%`}"
+                    tools:text="100%" />
+
+            </LinearLayout>
+
+            <!-- equalize -->
+            <com.mikepenz.iconics.view.IconicsImageView
+                android:id="@+id/settings"
+                android:enabled="@{model.isPlaying()}"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:iiv_color="@drawable/stateful_icon"
+                app:iiv_icon="cmd-equalizer"
+                app:iiv_size="24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/information_layout"
+                app:layout_constraintEnd_toEndOf="@+id/information_layout"
+                app:layout_constraintTop_toTopOf="@+id/information_layout" />
+
+            <!-- icon -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/image_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/information_layout">
+
+                <!-- visualizer-->
+                <midoriiro.madfx.audio.visualizers.CircularVolumeUnitVisualizer
+                    android:id="@+id/visualizer"
+                    android:enabled="@{model.isPlaying()}"
+                    android:visibility="@{model.isPlaying() ? View.VISIBLE : View.GONE}"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="5dp"
+                    android:elevation="8dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:radius="32dp"
+                    app:normalize="true"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:enabled="@{model.isConnected()}"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginBottom="5dp"
+                    app:cardElevation="8dp"
+                    app:cardCornerRadius="32dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="16dp"
+                        tools:srcCompat="@tools:sample/avatars" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintTop_toBottomOf="@id/image_layout"
+                app:layout_constraintBottom_toTopOf="@id/information_layout"/>
+
+            <!-- information -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/information_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_layout"
+                tools:layout_editor_absoluteX="16dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/name"
+                        android:enabled="@{model.isConnected()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="@{model.name}"
+                        android:textColor="@drawable/stateful_text_view"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="@tools:sample/lorem" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/address"
+                        android:enabled="@{model.isConnected()}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="@{model.address}"
+                        android:textSize="14sp"
+                        tools:text="@tools:sample/lorem" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>
