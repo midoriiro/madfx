@@ -1,5 +1,7 @@
 package midoriiro.madfx.bluetooth.specifications
 
+import kotlin.Int
+
 class BluetoothGattServices {
   companion object {
     const val GENERIC_ACCESS: Int = 0x1800

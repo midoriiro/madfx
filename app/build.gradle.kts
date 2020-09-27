@@ -74,8 +74,8 @@ tasks.register<GenerateGattClasses>("generateGattClasses")
 {
     this.group = "Generate"
     this.description = "Generate Bluetooth Gatt attributes classes"
-    this.packageName = "midoriiro.audiofx.bluetooth.specifications"
-    this.outputPath = "../bluetooth/src/main/java"
+    this.packageName = "midoriiro.madfx.bluetooth.specifications"
+    this.outputPath = "src/main/java"
 }
 repositories {
 	mavenCentral()

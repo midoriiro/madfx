@@ -1,5 +1,7 @@
 package midoriiro.madfx.bluetooth.specifications
 
+import kotlin.Int
+
 class BluetoothGattCharacteristics {
   companion object {
     const val AEROBIC_HEART_RATE_LOWER_LIMIT: Int = 0x2A7E

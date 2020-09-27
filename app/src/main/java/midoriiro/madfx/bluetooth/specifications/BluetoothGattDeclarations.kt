@@ -1,5 +1,7 @@
 package midoriiro.madfx.bluetooth.specifications
 
+import kotlin.Int
+
 class BluetoothGattDeclarations {
   companion object {
     const val CHARACTERISTIC_DECLARATION: Int = 0x2803
