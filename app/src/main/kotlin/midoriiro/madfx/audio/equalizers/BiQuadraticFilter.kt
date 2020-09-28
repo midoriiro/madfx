@@ -69,6 +69,8 @@ class BiQuadraticFilter
 			{
 				this._f = FREQUENCY_MAXIMUM
 			}
+			
+			this._f = this._f / this._fs
 		}
 		get() = this._f
 	
@@ -113,10 +115,10 @@ class BiQuadraticFilter
 	{
 		this.reset()
 		this._type = type
+		this._fs = rate
 		this.frequency = frequency
 		this.gain = gain
 		this.width = width
-		this._fs = rate
 		this.computeConstants()
 	}
 	
