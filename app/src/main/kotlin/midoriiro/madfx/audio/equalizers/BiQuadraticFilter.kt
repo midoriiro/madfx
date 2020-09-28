@@ -135,11 +135,11 @@ class BiQuadraticFilter
 		return 20.0 * log10(sqrt(numerator / denominator))
 	}
 	
-	fun filter(frequency: Double): Double
+	fun filter(sample: Double): Double
 	{
-		this._y = (this._b0 * frequency) + (this._b1 * this._x1) + (this._b2 * this._x2) - (this._a1 * this._y1) - (this._a2 * this._y2)
+		this._y = (this._b0 * sample) + (this._b1 * this._x1) + (this._b2 * this._x2) - (this._a1 * this._y1) - (this._a2 * this._y2)
 		this._x2 = this._x1
-		this._x1 = frequency
+		this._x1 = sample
 		this._y2 = this._y1
 		this._y1 = this._y
 		return this._y
