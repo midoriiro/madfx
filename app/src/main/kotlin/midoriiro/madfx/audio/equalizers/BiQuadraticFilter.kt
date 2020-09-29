@@ -60,7 +60,6 @@ class BiQuadraticFilter
 		set(value)
 		{
 			this._f = value
-			
 			if(this._f < FREQUENCY_MINIMUM)
 			{
 				this._f = FREQUENCY_MINIMUM
@@ -78,7 +77,6 @@ class BiQuadraticFilter
 		set(value)
 		{
 			this._g = value
-			
 			if(this._g < GAIN_MINIMUM)
 			{
 				this._g = GAIN_MINIMUM
@@ -94,7 +92,6 @@ class BiQuadraticFilter
 		set(value)
 		{
 			this._q = value
-			
 			if(this._q < Q_MINIMUM)
 			{
 				this._q = Q_MINIMUM
@@ -111,27 +108,15 @@ class BiQuadraticFilter
 		this.configure(type, frequency, gain, width, rate)
 	}
 	
-	fun configure(type: Type, frequency: Double, gain: Double,  width: Double, rate: Double)
+	fun amplitude(frequency: Double): Double
 	{
-		this.reset()
-		this._type = type
-		this._fs = rate
-		this.frequency = frequency
-		this.gain = gain
-		this.width = width
-		this.computeConstants()
-	}
-	
-	fun evaluate(frequency: Double): Double
-	{
-		val phi  = (sin(2.0 * PI * frequency / (2.0 * this._fs))).pow(2.0)
-		val phi2 = phi * phi
+		val phi = sin(2.0 * Math.PI * frequency / (2.0 * this._fs)).pow(2.0)
 		val a2 = (this._a0 + this._a1 + this._a2).pow(2.0)
 		val b2 = (this._b0 + this._b1 + this._b2).pow(2.0)
 		val a4 = this._a0*this._a1 + 4.0*this._a0*this._a2 + this._a1*this._a2
 		val b4 = this._b0*this._b1 + 4.0*this._b0*this._b2 + this._b1*this._b2
-		val numerator = b2 - 4.0*(b4)*phi + 16.0*this._b0*this._b2*phi2
-		val denominator = a2 - 4.0*(a4)*phi + 16.0*this._a0*this._a2*phi2
+		val numerator = b2 - 4.0*(b4)*phi + 16.0*this._b0*this._b2*phi*phi
+		val denominator = a2 - 4.0*(a4)*phi + 16.0*this._a0*this._a2*phi*phi
 		return 20.0 * log10(sqrt(numerator / denominator))
 	}
 	
@@ -155,15 +140,16 @@ class BiQuadraticFilter
 	
 	private fun computeConstants()
 	{
-		val A = (this._g / 40.0).pow(10.0)
-		val omega = 2 * PI * this._f / this._fs
+		val A = 10.0.pow(this._g / 40.0)
+		val omega = 2.0 * PI * this._f / this._fs
 		val sin = sin(omega)
 		val cos = cos(omega)
 		val alpha = sin / (2.0 * this._q)
 		val beta = sqrt(A + A)
 		when(this._type)
 		{
-			Type.BAND_PASS -> {
+			Type.BAND_PASS ->
+			{
 				this._b0 = alpha
 				this._b1 = 0.0
 				this._b2 = -alpha
@@ -171,7 +157,8 @@ class BiQuadraticFilter
 				this._a1 = -2.0 * cos
 				this._a2 = +1.0 - alpha
 			}
-			Type.LOW_PASS -> {
+			Type.LOW_PASS ->
+			{
 				val cosm = 1.0 - cos
 				val cosmd = cosm / 2.0
 				this._b0 = cosmd
@@ -181,7 +168,8 @@ class BiQuadraticFilter
 				this._a1 = -2.0 * cos
 				this._a2 = +1.0 - alpha
 			}
-			Type.HIGH_PASS -> {
+			Type.HIGH_PASS ->
+			{
 				val cosp = 1.0 + cos
 				val cospd = cosp / 2.0
 				this._b0 = cospd
@@ -191,7 +179,8 @@ class BiQuadraticFilter
 				this._a1 = -2.0 * cos
 				this._a2 = +1.0 - alpha
 			}
-			Type.NOTCH -> {
+			Type.NOTCH ->
+			{
 				val cosm = -2.0 * cos
 				this._b0 = +1.0
 				this._b1 = cosm
@@ -200,7 +189,8 @@ class BiQuadraticFilter
 				this._a1 = cosm
 				this._a2 = +1.0 - alpha
 			}
-			Type.BELL -> {
+			Type.BELL ->
+			{
 				val am = alpha * A
 				val ad = alpha / A
 				val cosm = -2.0 * cos
@@ -211,7 +201,8 @@ class BiQuadraticFilter
 				this._a1 = cosm
 				this._a2 = +1.0 - ad
 			}
-			Type.LOW_SHELF -> {
+			Type.LOW_SHELF ->
+			{
 				val ap = A + 1.0
 				val am = A - 1.0
 				this._b0 = A * (ap - am * cos + beta * sin)
@@ -221,7 +212,8 @@ class BiQuadraticFilter
 				this._a1 = -2.0 * (am + ap * cos)
 				this._a2 = ap + am * cos - beta * sin
 			}
-			Type.HIGH_SHELF -> {
+			Type.HIGH_SHELF ->
+			{
 				val ap = A + 1.0
 				val am = A - 1.0
 				this._b0 = A * (ap + am * cos + beta * sin)
