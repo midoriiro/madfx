@@ -158,9 +158,9 @@ class BiQuadraticFilter
 		this.reset()
 		this._type = type
 		this._fs = rate
-		this.frequency = frequency
-		this.gain = gain
-		this.width = width
+		this._f = frequency
+		this._g = gain
+		this._q = width
 		this.computeConstants()
 	}
 	
