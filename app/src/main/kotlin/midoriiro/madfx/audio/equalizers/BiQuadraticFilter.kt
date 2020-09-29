@@ -27,7 +27,7 @@ class BiQuadraticFilter
 		HIGH_SHELF
 	}
 	
-	private companion object
+	companion object
 	{
 		const val Q_MINIMUM = 0.025
 		const val Q_MAXIMUM = 30.0
@@ -56,7 +56,15 @@ class BiQuadraticFilter
 	private var _q: Double = 0.0
 	private var _type: Type = Type.BELL
 	
-	private var frequency: Double
+	var type: Type
+		set(value)
+		{
+			this._type = value
+			this.configure(this._type, this._f, this._g, this._q, this._fs)
+		}
+		get() = this._type
+	
+	var frequency: Double
 		set(value)
 		{
 			this._f = value
@@ -68,12 +76,11 @@ class BiQuadraticFilter
 			{
 				this._f = FREQUENCY_MAXIMUM
 			}
-			
-			this._f = this._f / this._fs
+			this.configure(this._type, this._f, this._g, this._q, this._fs)
 		}
 		get() = this._f
 	
-	private var gain: Double
+	var gain: Double
 		set(value)
 		{
 			this._g = value
@@ -85,10 +92,11 @@ class BiQuadraticFilter
 			{
 				this._g = GAIN_MAXIMUM
 			}
+			this.configure(this._type, this._f, this._g, this._q, this._fs)
 		}
 		get() = this._g
 	
-	private var width: Double
+	var width: Double
 		set(value)
 		{
 			this._q = value
@@ -100,10 +108,25 @@ class BiQuadraticFilter
 			{
 				this._q = Q_MAXIMUM
 			}
+			this.configure(this._type, this._f, this._g, this._q, this._fs)
 		}
 		get() = this._q
 	
-	constructor(type: Type, frequency: Double, gain: Double,  width: Double, rate: Double)
+	var rate:Double
+		set(value)
+		{
+			this._fs = value
+			this.configure(this._type, this._f, this._g, this._q, this._fs)
+		}
+		get() = this._fs
+	
+	val constants: List<Double>
+		get()
+		{
+			return listOf(this._a0, this._a1, this._a2, this._b0, this._b1, this._b2)
+		}
+	
+	constructor(type: Type, frequency: Double, gain: Double, width: Double, rate: Double)
 	{
 		this.configure(type, frequency, gain, width, rate)
 	}
@@ -128,6 +151,17 @@ class BiQuadraticFilter
 		this._y2 = this._y1
 		this._y1 = this._y
 		return this._y
+	}
+	
+	private fun configure(type: Type, frequency: Double, gain: Double, width: Double, rate: Double)
+	{
+		this.reset()
+		this._type = type
+		this._fs = rate
+		this.frequency = frequency
+		this.gain = gain
+		this.width = width
+		this.computeConstants()
 	}
 	
 	private fun reset()
