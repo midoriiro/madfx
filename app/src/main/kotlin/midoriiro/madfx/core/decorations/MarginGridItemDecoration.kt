@@ -29,18 +29,7 @@ class MarginGridItemDecoration(private val space: Int) : RecyclerView.ItemDecora
 		{
 			outRect.top = this.space
 		}
-		else
-		{
-			outRect.top = this.space / spanCount
-		}
 		
-		if(position >= spanCount)
-		{
-			outRect.bottom = this.space
-		}
-		else
-		{
-			outRect.bottom = this.space / spanCount
-		}
+		outRect.bottom = this.space
 	}
 }
