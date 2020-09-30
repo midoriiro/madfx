@@ -50,6 +50,7 @@ class BluetoothDeviceViewModel : ViewModel()
     }
 }
 
+// TODO move this on another place
 @BindingAdapter("app:iiv_icon")
 fun setIcon(view: IconicsImageView, icon: String) {
     view.icon!!.icon(icon)

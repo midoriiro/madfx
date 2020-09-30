@@ -16,7 +16,7 @@ android {
     buildToolsVersion("30.0.2")
 
     defaultConfig {
-        applicationId = "midoriiro.audiofx"
+        applicationId = "midoriiro.madfx"
         minSdkVersion(23)
         targetSdkVersion(30)
         versionCode = 1

@@ -18,7 +18,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="midoriiro.madfx.activities.MainActivity">
-
         </activity>
         <activity
             android:name="midoriiro.madfx.activities.PermissionActivity" />
