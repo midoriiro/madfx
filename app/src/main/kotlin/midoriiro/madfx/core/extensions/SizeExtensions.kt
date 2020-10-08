@@ -9,13 +9,13 @@ fun Float.toPixel(): Float
 	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, metrics)
 }
 
-fun Float.toDp(): Float
+fun Float.fromDp(): Float
 {
 	val metrics = Application.instance.resources.displayMetrics
-	return this / metrics.density
+	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, metrics)
 }
 
-fun Float.toSp(): Float
+fun Float.fromSp(): Float
 {
 	val metrics = Application.instance.resources.displayMetrics
 	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, metrics)

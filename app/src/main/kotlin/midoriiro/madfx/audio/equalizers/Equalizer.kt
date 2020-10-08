@@ -549,8 +549,6 @@ class Equalizer : View
 	private val _path = Path()
 	private val _bands = mutableListOf<Band>()
 	private val _rainbow = Rainbow()
-	private var _baselineColor = 0
-	private var _baselineStrokeWidth = 0f
 	private var _primaryTraceColor = 0
 	private var _primaryTraceStrokeWidth = 0f
 	private var _secondaryTraceColor = 0
@@ -603,24 +601,15 @@ class Equalizer : View
 		)
 		
 		// TODO change default values
-		this._baselineColor = typedArray.getColor(
-			R.styleable.Equalizer_baselineColor,
-			this.resources.getColor(R.color.colorAccent, theme)
-		)
-		
-		this._baselineStrokeWidth = typedArray.getDimension(
-			R.styleable.Equalizer_baselineStrokeWidth,
-			2f.toDp() // TODO move default values to another place
-		)
-		
 		this._primaryTraceColor = typedArray.getColor(
 			R.styleable.Equalizer_primaryTraceColor,
 			this.resources.getColor(R.color.colorAccent, theme)
+			// TODO move default values to another place
 		)
 		
 		this._primaryTraceStrokeWidth = typedArray.getDimension(
 			R.styleable.Equalizer_primaryTraceStrokeWidth,
-			4f.toDp()
+			2f.fromDp()
 		)
 		
 		this._secondaryTraceColor = typedArray.getColor(
@@ -630,7 +619,7 @@ class Equalizer : View
 		
 		this._secondaryTraceStrokeWidth = typedArray.getDimension(
 			R.styleable.Equalizer_secondaryTraceStrokeWidth,
-			2f.toDp()
+			2f.fromDp()
 		)
 		
 		this._gridColor = typedArray.getColor(
@@ -640,7 +629,7 @@ class Equalizer : View
 		
 		this._gridStrokeWidth = typedArray.getDimension(
 			R.styleable.Equalizer_gridStrokeWidth,
-			2f.toDp()
+			1f.fromDp()
 		)
 		
 		this._labelXColor = typedArray.getColor(
@@ -650,12 +639,12 @@ class Equalizer : View
 		
 		this._labelXSize = typedArray.getDimension(
 			R.styleable.Equalizer_labelXSize,
-			16f.toSp()
+			16f.fromSp()
 		)
 
 		this._labelXPadding = typedArray.getDimension(
 			R.styleable.Equalizer_labelXPadding,
-			16f.toDp()
+			16f.fromDp()
 		)
 		
 		this._labelYColor = typedArray.getColor(
@@ -665,17 +654,17 @@ class Equalizer : View
 		
 		this._labelYSize = typedArray.getDimension(
 			R.styleable.Equalizer_labelYSize,
-			16f.toSp()
+			16f.fromSp()
 		)
 
 		this._labelYPadding = typedArray.getDimension(
 			R.styleable.Equalizer_labelYPadding,
-			16f.toDp()
+			16f.fromDp()
 		)
 
 		this._bubbleSize = typedArray.getDimension(
 			R.styleable.Equalizer_bubbleSize,
-			12f.toDp()
+			6f.fromDp()
 		)
 		
 		typedArray.recycle()
@@ -784,8 +773,7 @@ class Equalizer : View
 	)
 	{
 		super.onSizeChanged(w, h, oldw, oldh)
-		Bounds.setBounds(this, 64f.toDp(), 64f.toDp(), 128f.toDp(), 32f.toDp())
-//		Bounds.setBounds(this, 160f.toDp(), 128f.toDp(), 160f.toDp(), 128f.toDp())
+		Bounds.setBounds(this, 64f.fromDp(), 64f.fromDp(), 64f.fromDp(), 32f.fromDp())
 		this.setGridLinesShader()
 		this.setMainTraceShader()
 		this.setTracesShader()

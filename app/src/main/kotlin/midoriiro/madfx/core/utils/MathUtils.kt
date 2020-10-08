@@ -9,5 +9,14 @@ class MathUtils
 			return (value - a) / (b - a) * (d-c) + c
 		}
 		
+		fun map(value: Double, a: Double, b: Double, c: Double, d: Double): Double
+		{
+			return (value - a) / (b - a) * (d-c) + c
+		}
+		
+		fun map(value: Int, a: Int, b: Int, c: Int, d: Int): Int
+		{
+			return (value - a) / (b - a) * (d-c) + c
+		}
 	}
 }
