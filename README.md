@@ -7,6 +7,8 @@ An Android application to handle your Bluetooth devices audio configuration (vol
 
 <img src="./images/devices_list.png" alt="device_list" width="256"/>
 
+![equalizer](./images/equalizer.gif)
+
 ## Todo list
 
  - [ ] Documentations
@@ -28,8 +30,10 @@ An Android application to handle your Bluetooth devices audio configuration (vol
  - [ ] Notification view
  - [ ] Equalizer view
 	 - [ ] Parametric view
-	 - [ ] Curve view
-	 - [ ] Find a solution to handle 10+ bands frequencies independent of the device 
+	 - [ ] Simple curve view (linear scale)
+	 - [ ] Curve view (log10 scale)
+	 - [ ] Find a solution to handle 10+ bands frequencies independent of the device
+	    - [x] BiQuadraticFilter (perfect for drawing curve, need to test with subclass AudioEffect class)
  - [ ] Volumes view
 	 - [ ] Media
 	 - [ ] Ring/notification/system

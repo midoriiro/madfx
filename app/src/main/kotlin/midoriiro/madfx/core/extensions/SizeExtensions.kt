@@ -14,3 +14,9 @@ fun Float.toDp(): Float
 	val metrics = Application.instance.resources.displayMetrics
 	return this / metrics.density
 }
+
+fun Float.toSp(): Float
+{
+	val metrics = Application.instance.resources.displayMetrics
+	return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, this, metrics)
+}

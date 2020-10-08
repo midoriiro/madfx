@@ -1,11 +1,6 @@
 package midoriiro.madfx.audio.equalizers
 
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.log10
-import kotlin.math.pow
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
 
 /**
@@ -13,6 +8,7 @@ import kotlin.math.sqrt
  *  - https://webaudio.github.io/Audio-EQ-Cookbook/audio-eq-cookbook.html
  *  - https://www.diva-portal.org/smash/get/diva2:1031081/FULLTEXT01.pdf
  *  - https://arachnoid.com/BiQuadDesigner/index.html
+ *  - https://groups.google.com/g/comp.dsp/c/jA-o05autEQ
  */
 class BiQuadraticFilter
 {
@@ -126,14 +122,20 @@ class BiQuadraticFilter
 			return listOf(this._a0, this._a1, this._a2, this._b0, this._b1, this._b2)
 		}
 	
-	constructor(type: Type, frequency: Double, gain: Double, width: Double, rate: Double)
+	constructor(
+		type: Type,
+		frequency: Double,
+		gain: Double,
+		width: Double,
+		rate: Double
+	)
 	{
 		this.configure(type, frequency, gain, width, rate)
 	}
 	
 	fun amplitude(frequency: Double): Double
 	{
-		val phi = sin(2.0 * Math.PI * frequency / (2.0 * this._fs)).pow(2.0)
+		val phi = sin(2.0 * PI * frequency / (2.0 * this._fs)).pow(2.0)
 		val a2 = (this._a0 + this._a1 + this._a2).pow(2.0)
 		val b2 = (this._b0 + this._b1 + this._b2).pow(2.0)
 		val a4 = this._a0*this._a1 + 4.0*this._a0*this._a2 + this._a1*this._a2
@@ -153,7 +155,13 @@ class BiQuadraticFilter
 		return this._y
 	}
 	
-	private fun configure(type: Type, frequency: Double, gain: Double, width: Double, rate: Double)
+	private fun configure(
+		type: Type,
+		frequency: Double,
+		gain: Double,
+		width: Double,
+		rate: Double
+	)
 	{
 		this.reset()
 		this._type = type
@@ -185,7 +193,7 @@ class BiQuadraticFilter
 			Type.BAND_PASS ->
 			{
 				this._b0 = alpha
-				this._b1 = 0.0
+				this._b1 = +0.0
 				this._b2 = -alpha
 				this._a0 = +1.0 + alpha
 				this._a1 = -2.0 * cos
@@ -253,7 +261,7 @@ class BiQuadraticFilter
 				this._b0 = A * (ap + am * cos + beta * sin)
 				this._b1 = -2.0 * A * (am + ap * cos)
 				this._b2 = A * (ap + am * cos - beta * sin)
-				this._a0 = ap - ap * cos + beta * sin
+				this._a0 = ap - am * cos + beta * sin
 				this._a1 = 2.0 * (am - ap * cos)
 				this._a2 = ap - am * cos - beta * sin
 			}

@@ -9,4 +9,21 @@
         <attr name="smooth" format="integer"/>
         <attr name="radius" format="dimension"/>
     </declare-styleable>
+    <declare-styleable name="Equalizer">
+        <attr name="baselineColor" format="color"/>
+        <attr name="baselineStrokeWidth" format="dimension"/>
+        <attr name="primaryTraceColor" format="color"/>
+        <attr name="primaryTraceStrokeWidth" format="dimension"/>
+        <attr name="secondaryTraceColor" format="color"/>
+        <attr name="secondaryTraceStrokeWidth" format="dimension"/>
+        <attr name="gridColor" format="color"/>
+        <attr name="gridStrokeWidth" format="dimension"/>
+        <attr name="labelXColor" format="color"/>
+        <attr name="labelXSize" format="dimension"/>
+        <attr name="labelXPadding" format="dimension"/>
+        <attr name="labelYColor" format="color"/>
+        <attr name="labelYSize" format="dimension"/>
+        <attr name="labelYPadding" format="dimension"/>
+        <attr name="bubbleSize" format="dimension"/>
+    </declare-styleable>
 </resources>
