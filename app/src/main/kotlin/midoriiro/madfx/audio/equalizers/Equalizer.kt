@@ -569,13 +569,10 @@ class Equalizer : View
 	
 	private fun init(attrs: AttributeSet, defStyle: Int)
 	{
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
-		{
-			// Hardware acceleration disabled for prior API level 28, because:
-			//  - Same type of shaders inside ComposeShader is unsupported
-			// https://developer.android.com/guide/topics/graphics/hardware-accel.html#unsupported
-			this.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-		}
+		// Hardware acceleration disabled for prior API level 28, because:
+		//  - Same type of shaders inside ComposeShader is unsupported
+		// https://developer.android.com/guide/topics/graphics/hardware-accel.html#unsupported
+		this.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
 		val theme = this.context.theme
 		

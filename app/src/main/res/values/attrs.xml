@@ -10,8 +10,6 @@
         <attr name="radius" format="dimension"/>
     </declare-styleable>
     <declare-styleable name="Equalizer">
-        <attr name="baselineColor" format="color"/>
-        <attr name="baselineStrokeWidth" format="dimension"/>
         <attr name="primaryTraceColor" format="color"/>
         <attr name="primaryTraceStrokeWidth" format="dimension"/>
         <attr name="secondaryTraceColor" format="color"/>
