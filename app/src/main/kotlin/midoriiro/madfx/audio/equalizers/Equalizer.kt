@@ -12,6 +12,7 @@ import midoriiro.madfx.core.colors.Rainbow
 import midoriiro.madfx.core.extensions.*
 import midoriiro.madfx.core.utils.MathUtils
 import kotlin.math.log10
+import kotlin.math.pow
 
 class Equalizer : View
 {
@@ -144,7 +145,7 @@ class Equalizer : View
 			private var _gainFloatMinimum = 0f
 			private var _gainFloatMaximum = 0f
 
-			private var _resolution = 1000
+			private var _resolution = 256
 			private var _resolutionFloat = 0f
 			
 			private var _frequencies = mutableListOf<Float>()
@@ -207,50 +208,25 @@ class Equalizer : View
 					this._resolution = value
 					this._resolutionFloat = value.toFloat()
 					this._frequencies.clear()
-					// TODO refactor this ugly code
-					for(index in 0 until this._resolution)
+					for (exponent in 1..5)
 					{
-						val frequency = MathUtils.map(
-							index.toFloat(),
-							0f,
-							this._resolutionFloat,
-							1f,
-							10f
-						)
-						this._frequencies.add(frequency)
-					}
-					for(index in 0 until this._resolution)
-					{
-						val frequency = MathUtils.map(
-							index.toFloat(),
-							0f,
-							this._resolutionFloat,
-							10f,
-							100f
-						)
-						this._frequencies.add(frequency)
-					}
-					for(index in 0 until this._resolution)
-					{
-						val frequency = MathUtils.map(
-							index.toFloat(),
-							0f,
-							this._resolutionFloat,
-							100f,
-							1000f
-						)
-						this._frequencies.add(frequency)
-					}
-					for(index in 0 until this._resolution)
-					{
-						val frequency = MathUtils.map(
-							index.toFloat(),
-							0f,
-							this._resolutionFloat,
-							1000f,
-							44100f
-						)
-						this._frequencies.add(frequency)
+						val minimum = 10f.pow(exponent.toFloat() - 1)
+						var maximum = 10f.pow(exponent.toFloat())
+						if(maximum > 44100f)
+						{
+							maximum = 44100f
+						}
+						for(index in 0..this._resolution)
+						{
+							val frequency = MathUtils.map(
+								index.toFloat(),
+								0f,
+								this._resolutionFloat,
+								minimum,
+								maximum
+							)
+							this._frequencies.add(frequency)
+						}
 					}
 				}
 				get() = this._resolution
@@ -466,6 +442,13 @@ class Equalizer : View
 				else -> this._color.toTransparent(0f)
 			}
 
+		val bubbleColor: Int
+			get() = when
+			{
+				this.isEnabled -> this._color
+				else -> this._color.toTransparent(0.5f)
+			}
+
 		val color: Int
 			get() = when
 			{
@@ -619,7 +602,7 @@ class Equalizer : View
 		
 		this._secondaryTraceStrokeWidth = typedArray.getDimension(
 			R.styleable.Equalizer_secondaryTraceStrokeWidth,
-			2f.fromDp()
+			1f.fromDp()
 		)
 		
 		this._gridColor = typedArray.getColor(
@@ -749,7 +732,7 @@ class Equalizer : View
 		this._gridLines.shader = shader
 	}
 
-	private fun setMainTraceShader()
+	private fun setPrimaryTraceShader()
 	{
 		val color = this._primaryTraceColor
 		val backgroundColor = this._primaryTraceColor
@@ -757,7 +740,7 @@ class Equalizer : View
 		this._traceBackgroundShader = Equalizer.shaderFactory(backgroundColor)
 	}
 
-	private fun setTracesShader()
+	private fun setSecondaryTracesShader()
 	{
 		for(band in this._bands)
 		{
@@ -775,8 +758,8 @@ class Equalizer : View
 		super.onSizeChanged(w, h, oldw, oldh)
 		Bounds.setBounds(this, 64f.fromDp(), 64f.fromDp(), 64f.fromDp(), 32f.fromDp())
 		this.setGridLinesShader()
-		this.setMainTraceShader()
-		this.setTracesShader()
+		this.setPrimaryTraceShader()
+		this.setSecondaryTracesShader()
 	}
 	
 	override fun onDraw(canvas: Canvas)
@@ -924,7 +907,7 @@ class Equalizer : View
 			this._painter.shader = null
 		}
 		val selectedBand = this._bands.singleOrNull { band -> band.isEnabled && band.isSelected }
-		this.onDrawMainTrace(canvas, selectedBand != null)
+		this.onDrawPrimaryTrace(canvas, selectedBand != null)
 		if(selectedBand != null)
 		{
 			this.onDrawSelectedTrace(canvas, selectedBand)
@@ -932,7 +915,7 @@ class Equalizer : View
 		this.onDrawBubble(canvas)
 	}
 
-	private fun onDrawMainTrace(canvas: Canvas, bandSelected: Boolean)
+	private fun onDrawPrimaryTrace(canvas: Canvas, bandSelected: Boolean)
 	{
 		val points = this._bands
 			// only select enabled bands
@@ -947,7 +930,7 @@ class Equalizer : View
 		this._path.rewind()
 		this._path.fromPoints(points)
 		this._painter.style = Paint.Style.STROKE
-		this._painter.color = this._primaryTraceColor.toTransparent(0.5f)
+		this._painter.color = this._primaryTraceColor
 		this._painter.strokeWidth = this._primaryTraceStrokeWidth
 		this._painter.shader = this._traceShader
 		canvas.drawPath(this._path, this._painter)
@@ -1000,7 +983,7 @@ class Equalizer : View
 		for(band in this._bands)
 		{
 			this._painter.style = Paint.Style.FILL
-			this._painter.color = band.color
+			this._painter.color = band.bubbleColor
 			when(band.filter.type)
 			{
 				BiQuadraticFilter.Type.LOW_PASS,
