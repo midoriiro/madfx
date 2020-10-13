@@ -1,4 +1,4 @@
-package midoriiro.madfx.audio.equalizers
+package midoriiro.madfx.audio.equalizers.filters
 
 import kotlin.math.*
 

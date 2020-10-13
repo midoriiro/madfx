@@ -2,10 +2,11 @@ package midoriiro.madfx.audio.equalizers
 
 import android.content.Context
 import android.graphics.*
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import midoriiro.madfx.R
+import midoriiro.madfx.audio.equalizers.adapters.BandFilterAdapter
+import midoriiro.madfx.audio.equalizers.filters.BiQuadraticFilter
 import midoriiro.madfx.core.Application
 import midoriiro.madfx.core.collections.LineArray
 import midoriiro.madfx.core.colors.Rainbow
@@ -16,116 +17,116 @@ import kotlin.math.pow
 
 class Equalizer : View
 {
-	private class Bounds
+	open class Bounds
 	{
-		companion object
+		protected val _bounds = RectF()
+		protected var _width = 0f
+		protected var _widthWithPadding = 0f
+		protected var _halfWidth = 0f
+		protected var _height = 0f
+		protected var _heightWithPadding = 0f
+		protected var _halfHeight = 0f
+		protected var _heightTwoThird = 0f
+		protected var _heightTwoThirdWithPadding = 0f
+		protected var _halfHeightTwoThird = 0f
+		protected var _halfHeightTwoThirdWithPadding = 0f
+		protected var _top = 0f
+		protected var _topWithPadding = 0f
+		protected var _bottom = 0f
+		protected var _bottomWithPadding = 0f
+		protected var _left = 0f
+		protected var _leftWithPadding = 0f
+		protected var _right = 0f
+		protected var _rightWithPadding = 0f
+
+		val width: Float
+			get() = this._width
+
+		val widthWithPadding: Float
+			get() = this._widthWithPadding
+
+		val halfWidth: Float
+			get() = this._halfWidth
+
+		val height: Float
+			get() = this._height
+
+		val heightWithPadding: Float
+			get() = this._heightWithPadding
+
+		val halfHeight: Float
+			get() = this._halfHeight
+
+		val heightTwoThird: Float
+			get() = this._heightTwoThird
+
+		val heightTwoThirdWithPadding: Float
+			get() = this._heightTwoThirdWithPadding
+
+		val halfHeightTwoThird: Float
+			get() = this._halfHeightTwoThird
+
+		val halfHeightTwoThirdWithPadding: Float
+			get() = this._halfHeightTwoThirdWithPadding
+
+		val top: Float
+			get() = this._top
+
+		val topWithPadding: Float
+			get() = this._topWithPadding
+
+		val bottom: Float
+			get() = this._bottom
+
+		val bottomWithPadding: Float
+			get() = this._bottomWithPadding
+
+		val left: Float
+			get() = this._left
+
+		val leftWithPadding: Float
+			get() = this._leftWithPadding
+
+		val right: Float
+			get() = this._right
+
+		val rightWithPadding: Float
+			get() = this._rightWithPadding
+	}
+
+	private class InternalBounds : Bounds()
+	{
+		fun setBounds(
+			view: View,
+			paddingLeft: Float,
+			paddingTop: Float,
+			paddingRight: Float,
+			paddingBottom: Float
+		)
 		{
-			private val _bounds = RectF()
-			private var _width = 0f
-			private var _widthWithPadding = 0f
-			private var _halfWidth = 0f
-			private var _height = 0f
-			private var _heightWithPadding = 0f
-			private var _halfHeight = 0f
-			private var _heightTwoThird = 0f
-			private var _heightTwoThirdWithPadding = 0f
-			private var _halfHeightTwoThird = 0f
-			private var _halfHeightTwoThirdWithPadding = 0f
-			private var _top = 0f
-			private var _topWithPadding = 0f
-			private var _bottom = 0f
-			private var _bottomWithPadding = 0f
-			private var _left = 0f
-			private var _leftWithPadding = 0f
-			private var _right = 0f
-			private var _rightWithPadding = 0f
-			
-			val width: Float
-				get() = this._width
-			
-			val widthWithPadding: Float
-				get() = this._widthWithPadding
-
-			val halfWidth: Float
-				get() = this._halfWidth
-			
-			val height: Float
-				get() = this._height
-			
-			val heightWithPadding: Float
-				get() = this._heightWithPadding
-
-			val halfHeight: Float
-				get() = this._halfHeight
-			
-			val heightTwoThird: Float
-				get() = this._heightTwoThird
-
-			val heightTwoThirdWithPadding: Float
-				get() = this._heightTwoThirdWithPadding
-			
-			val halfHeightTwoThird: Float
-				get() = this._halfHeightTwoThird
-
-			val halfHeightTwoThirdWithPadding: Float
-				get() = this._halfHeightTwoThirdWithPadding
-			
-			val top: Float
-				get() = this._top
-			
-			val topWithPadding: Float
-				get() = this._topWithPadding
-			
-			val bottom: Float
-				get() = this._bottom
-			
-			val bottomWithPadding: Float
-				get() = this._bottomWithPadding
-			
-			val left: Float
-				get() = this._left
-			
-			val leftWithPadding: Float
-				get() = this._leftWithPadding
-			
-			val right: Float
-				get() = this._right
-			
-			val rightWithPadding: Float
-				get() = this._rightWithPadding
-			
-			fun setBounds(
-				view: View,
-				paddingLeft: Float,
-				paddingTop: Float,
-				paddingRight: Float,
-				paddingBottom: Float
-			)
-			{
-				val minX = (view.left + view.paddingLeft).toFloat()
-				val maxX = (view.width).toFloat()
-				val minY = (view.top + view.paddingTop).toFloat()
-				val maxY = (view.height).toFloat()
-				this._bounds.set(minX, minY, maxX, maxY)
-				this._width = this._bounds.width()
-				this._widthWithPadding = this._width - paddingRight
-				this._halfWidth = this._width / 2f
-				this._height = this._bounds.height()
-				this._heightWithPadding = this._height - paddingBottom
-				this._halfHeight = this._height / 2f
-				this._top = this._bounds.top
-				this._topWithPadding = this._top + paddingTop
-				this._bottom = this._bounds.bottom
-				this._bottomWithPadding = this._bottom - paddingBottom
-				this._left = this._bounds.left
-				this._leftWithPadding = this._left + paddingLeft
-				this._right = this._bounds.right
-				this._rightWithPadding = this._right - paddingRight
-				this._heightTwoThird = this._height / 3f * 2f
-				this._heightTwoThirdWithPadding = this._heightWithPadding / 3f * 2f
-				this._halfHeightTwoThird = this._heightTwoThird / 2f + paddingTop / 2f
-				this._halfHeightTwoThirdWithPadding = this._heightTwoThirdWithPadding / 2f + this._topWithPadding / 2f
-			}
+			val minX = (view.left + view.paddingLeft).toFloat()
+			val maxX = (view.width).toFloat()
+			val minY = (view.top + view.paddingTop).toFloat()
+			val maxY = (view.height).toFloat()
+			this._bounds.set(minX, minY, maxX, maxY)
+			this._width = this._bounds.width()
+			this._widthWithPadding = this._width - paddingRight
+			this._halfWidth = this._width / 2f
+			this._height = this._bounds.height()
+			this._heightWithPadding = this._height - paddingBottom
+			this._halfHeight = this._height / 2f
+			this._top = this._bounds.top
+			this._topWithPadding = this._top + paddingTop
+			this._bottom = this._bounds.bottom
+			this._bottomWithPadding = this._bottom - paddingBottom
+			this._left = this._bounds.left
+			this._leftWithPadding = this._left + paddingLeft
+			this._right = this._bounds.right
+			this._rightWithPadding = this._right - paddingRight
+			this._heightTwoThird = this._height / 3f * 2f
+			this._heightTwoThirdWithPadding = this._heightWithPadding / 3f * 2f
+			this._halfHeightTwoThird = this._heightTwoThird / 2f + paddingTop / 2f
+			this._halfHeightTwoThirdWithPadding = this._heightTwoThirdWithPadding / 2f + this._topWithPadding / 2f
 		}
 	}
 	
@@ -212,9 +213,9 @@ class Equalizer : View
 					{
 						val minimum = 10f.pow(exponent.toFloat() - 1)
 						var maximum = 10f.pow(exponent.toFloat())
-						if(maximum > 44100f)
+						if(maximum > 50000f)
 						{
-							maximum = 44100f
+							maximum = 50000f
 						}
 						for(index in 0..this._resolution)
 						{
@@ -248,7 +249,7 @@ class Equalizer : View
 		}
 	}
 	
-	private class TicksXAxis
+	private inner class TicksXAxis
 	{
 		private val _ticks = listOf(
 			10f, 20f, 30f, 40f, 50f, 60f, 70f, 80f, 90f,
@@ -313,8 +314,8 @@ class Equalizer : View
 						tick,
 						this.ticksMinimum,
 						this.ticksMaximum,
-						Bounds.leftWithPadding,
-						Bounds.widthWithPadding
+						_bounds.leftWithPadding,
+						_bounds.widthWithPadding
 					)
 					list.add(x)
 				}
@@ -322,16 +323,12 @@ class Equalizer : View
 			}
 	}
 	
-	private class TicksYAxis
+	private inner class TicksYAxis
 	{
 		private val _ticks = listOf(
-			//30f, 27f,
-			//24f, 21f, 18f, 15f,
 			12f, 9f, 6f, 3f,
 			0f,
 			-3f, -6f, -9f, -12f,
-//			-15f, -18f, -21f, -24f,
-//			-27f, -30f
 		)
 		private val _ticksMinimum = this._ticks.minOrNull()!!
 		private val _ticksMaximum = this._ticks.maxOrNull()!!
@@ -355,8 +352,8 @@ class Equalizer : View
 						tick,
 						this.ticksMinimum,
 						this.ticksMaximum,
-						Bounds.topWithPadding,
-						Bounds.heightTwoThirdWithPadding
+						_bounds.topWithPadding,
+						_bounds.heightTwoThirdWithPadding
 					)
 					list.add(y)
 				}
@@ -365,50 +362,51 @@ class Equalizer : View
 	}
 	
 	private class Band(
+		bounds: Bounds,
 		color: Int,
 		enabled: Boolean,
 		selected: Boolean,
 		type: BiQuadraticFilter.Type,
 		frequency: Double,
 		gain: Double,
-		width: Double,
-		rate: Double
+		width: Double
 	)
 	{
 		companion object
 		{
-			fun compute(frequency: Float, amplitude: Float): PointF
+			fun compute(frequency: Float, amplitude: Float, bounds: Bounds): PointF
 			{
 				val x = MathUtils.map(
 					log10(frequency),
 					Limits.frequencyLog10Minimum,
 					Limits.frequencyLog10Maximum,
-					Bounds.leftWithPadding,
-					Bounds.widthWithPadding
+					bounds.leftWithPadding,
+					bounds.widthWithPadding
 				)
 				val y = MathUtils.map(
 					-amplitude,
 					Limits.gainFloatMinimum,
 					Limits.gainFloatMaximum,
-					Bounds.topWithPadding,
-					Bounds.heightTwoThirdWithPadding
+					bounds.topWithPadding,
+					bounds.heightTwoThirdWithPadding
 				)
 				return PointF(x, y)
 			}
 
-			fun compute(frequency: Float, amplitude: Double): PointF
+			fun compute(frequency: Float, amplitude: Double, bounds: Bounds): PointF
 			{
-				return compute(frequency, amplitude.toFloat())
+				return compute(frequency, amplitude.toFloat(), bounds)
 			}
 		}
 
+		private val _filter = BiQuadraticFilter(
+			type, frequency, gain, width, 96000.0
+		)
 		private var _isEnabled = enabled
 		private var _isSelected = selected
-
-		private val _filter = BiQuadraticFilter(
-			type, frequency, gain, width, rate
-		)
-		private val _color: Int = color
+		private val _bounds = bounds
+		private val _color = color
+		private val _backgroundPath = Path()
 		private val _path = Path()
 		private val _points = mutableListOf<PointF>()
 		private val _bubble = PointF()
@@ -431,9 +429,34 @@ class Equalizer : View
 				this.setShaders()
 			}
 			get() = this._isSelected
-		
-		val filter: BiQuadraticFilter
-			get() = this._filter
+
+		var type: BiQuadraticFilter.Type
+			set(value)
+			{
+				this._filter.type = value
+			}
+			get() = this._filter.type
+
+		var frequency: Double
+			set(value)
+			{
+				this._filter.frequency = value
+			}
+			get() = this._filter.frequency
+
+		var gain: Double
+			set(value)
+			{
+				this._filter.gain = value
+			}
+			get() = this._filter.gain
+
+		var width: Double
+			set(value)
+			{
+				this._filter.width = value
+			}
+			get() = this._filter.width
 
 		val backgroundColor: Int
 			get() = when
@@ -456,6 +479,9 @@ class Equalizer : View
 				this.isEnabled && !this.isSelected -> this._color.toTransparent(0.75f)
 				else -> this._color.toTransparent(0.5f)
 			}
+
+		val backgroundPath: Path
+			get() = this._backgroundPath
 		
 		val path: Path
 			get() = this._path
@@ -482,54 +508,157 @@ class Equalizer : View
 			
 		fun onDraw()
 		{
+			this._backgroundPath.rewind()
 			this._path.rewind()
 			this._points.clear()
 			this._amplitudes.clear()
 			for(frequency in Limits.frequencies)
 			{
 				val amplitude = this._filter.amplitude(frequency.toDouble())
-				val point = Band.compute(frequency, amplitude)
+				val point = Band.compute(frequency, amplitude, this._bounds)
 				this._points.add(point)
 				this._amplitudes[frequency] = amplitude
 			}
-			this._path.fromPoints(this._points)
 			val frequency = this._filter.frequency
-			this._bubble.set(Band.compute(frequency.toFloat(), this._filter.amplitude(frequency)))
+			this._bubble.set(Band.compute(frequency.toFloat(), this._filter.amplitude(frequency), this._bounds))
+			this._path.fromPoints(this._points)
+			this._backgroundPath.fromPoints(this._points)
+			when(this.type)
+			{
+				BiQuadraticFilter.Type.BAND_PASS ->
+				{
+					this._backgroundPath.close()
+				}
+				BiQuadraticFilter.Type.LOW_PASS ->
+				{
+					this._backgroundPath.lineToMinimal(this._points)
+				}
+				BiQuadraticFilter.Type.HIGH_PASS ->
+				{
+					this._backgroundPath.lineToMaximal(this._points)
+				}
+				else ->
+				{
+					this._backgroundPath.lineToBaseline(this._points, this._bounds.halfHeightTwoThirdWithPadding)
+				}
+			}
 		}
 
 		fun setShaders()
 		{
-			this._backgroundShader = Equalizer.shaderFactory(this.backgroundColor)
-			this._shader = Equalizer.shaderFactory(this.color)
+			this._backgroundShader = Equalizer.shaderFactory(this.backgroundColor, this._bounds)
+			this._shader = Equalizer.shaderFactory(this.color, this._bounds)
+		}
+	}
+
+	private inner class Listener : BandFilterAdapter.Listener()
+	{
+		override fun onItemInserted(index: Int)
+		{
+			val band = _adapter.get(index)
+			_bands.add(Band(
+				_bounds,
+				_rainbow[index],
+				band.isEnabled,
+				band.isSelected,
+				band.type,
+				band.frequency,
+				band.gain,
+				band.width
+			))
+			invalidate()
+		}
+
+		override fun onItemRemoved(index: Int)
+		{
+			_bands.removeAt(index)
+			invalidate()
+		}
+
+		override fun onItemTypeChanged(
+			index: Int,
+			type: BiQuadraticFilter.Type
+		)
+		{
+			_bands[index].type = type
+			invalidate()
+		}
+
+		override fun onItemFrequencyChanged(
+			index: Int,
+			frequency: Double
+		)
+		{
+			_bands[index].frequency = frequency
+			invalidate()
+		}
+
+		override fun onItemGainChanged(
+			index: Int,
+			gain: Double
+		)
+		{
+			_bands[index].gain = gain
+			invalidate()
+		}
+
+		override fun onItemWidthChanged(
+			index: Int,
+			width: Double
+		)
+		{
+			_bands[index].width = width
+			invalidate()
+		}
+
+		override fun onItemEnabledChanged(
+			index: Int,
+			state: Boolean
+		)
+		{
+			_bands[index].isEnabled = state
+			invalidate()
+		}
+
+		override fun onItemSelectionChanged()
+		{
+			for(index in 0 until _adapter.size())
+			{
+				val band = _adapter.get(index)
+				_bands[index].isSelected = band.isSelected
+			}
+			invalidate()
 		}
 	}
 
 	private companion object
 	{
-		fun shaderFactory(color: Int): LinearGradient
+		fun shaderFactory(color: Int, bounds: Bounds): LinearGradient
 		{
 			val colorTransparent = Application.instance.applicationContext.getColor(android.R.color.transparent)
 			return LinearGradient(
 				0f,
-				Bounds.heightTwoThirdWithPadding,
+				bounds.heightTwoThirdWithPadding,
 				0f,
-				Bounds.height,
+				bounds.height,
 				color,
 				colorTransparent,
 				Shader.TileMode.CLAMP
 			)
 		}
 	}
-	
+
+	private val _adapter = BandFilterAdapter()
+	private val _bounds = InternalBounds()
 	private val _ticksXAxis = TicksXAxis()
 	private val _ticksYAxis = TicksYAxis()
 	private lateinit var _ticksXAxisPoints: List<Float>
 	private lateinit var _ticksYAxisPoints: List<Float>
 	private lateinit var _traceShader: LinearGradient
 	private lateinit var _traceBackgroundShader: LinearGradient
-	private val _gridLines = LineArray()
 	private val _painter = Paint(Paint.ANTI_ALIAS_FLAG)
-	private val _path = Path()
+	private val _gridLines = LineArray()
+	private val _primaryTrace = Path()
 	private val _bands = mutableListOf<Band>()
 	private val _rainbow = Rainbow()
 	private var _primaryTraceColor = 0
@@ -538,6 +667,10 @@ class Equalizer : View
 	private var _secondaryTraceStrokeWidth = 0f
 	private var _gridColor = 0
 	private var _gridStrokeWidth = 0f
+	private var _gridPaddingTop = 0f
+	private var _gridPaddingBottom = 0f
+	private var _gridPaddingLeft = 0f
+	private var _gridPaddingRight = 0f
 	private var _labelXColor = 0
 	private var _labelXSize = 0f
 	private var _labelXPadding = 0f
@@ -545,6 +678,12 @@ class Equalizer : View
 	private var _labelYSize = 0f
 	private var _labelYPadding = 0f
 	private var _bubbleSize = 0f
+
+	val adapter: BandFilterAdapter
+		get() = this._adapter
+
+	val bounds: Bounds
+		get() = this._bounds
 	
 	constructor(
 		context: Context, attrs: AttributeSet
@@ -611,6 +750,26 @@ class Equalizer : View
 			R.styleable.Equalizer_gridStrokeWidth,
 			1f.fromDp()
 		)
+
+		this._gridPaddingTop = typedArray.getDimension(
+			R.styleable.Equalizer_gridPaddingTop,
+			32f
+		)
+
+		this._gridPaddingBottom = typedArray.getDimension(
+			R.styleable.Equalizer_gridPaddingBottom,
+			32f
+		)
+
+		this._gridPaddingLeft = typedArray.getDimension(
+			R.styleable.Equalizer_gridPaddingLeft,
+			32f
+		)
+
+		this._gridPaddingRight = typedArray.getDimension(
+			R.styleable.Equalizer_gridPaddingRight,
+			128f
+		)
 		
 		this._labelXColor = typedArray.getColor(
 			R.styleable.Equalizer_labelXColor,
@@ -619,12 +778,12 @@ class Equalizer : View
 		
 		this._labelXSize = typedArray.getDimension(
 			R.styleable.Equalizer_labelXSize,
-			16f.fromSp()
+			20f
 		)
 
 		this._labelXPadding = typedArray.getDimension(
 			R.styleable.Equalizer_labelXPadding,
-			16f.fromDp()
+			10f
 		)
 		
 		this._labelYColor = typedArray.getColor(
@@ -634,12 +793,12 @@ class Equalizer : View
 		
 		this._labelYSize = typedArray.getDimension(
 			R.styleable.Equalizer_labelYSize,
-			16f.fromSp()
+			20f
 		)
 
 		this._labelYPadding = typedArray.getDimension(
 			R.styleable.Equalizer_labelYPadding,
-			16f.fromDp()
+			10f
 		)
 
 		this._bubbleSize = typedArray.getDimension(
@@ -655,25 +814,27 @@ class Equalizer : View
 
 		this._rainbow.shuffle()
 
+		this._adapter.addListener(Listener())
+
 		// TODO remove this
 		// TODO handle case when bands is empty
 		this._bands.add(
-			Band(this._rainbow[0], true, true, BiQuadraticFilter.Type.LOW_PASS, 19000.0, 3.0, 1.2, 96000.0)
+			Band(this._bounds, this._rainbow[0], true, false, BiQuadraticFilter.Type.LOW_PASS, 19000.0, 3.0, 1.2)
 		)
 		this._bands.add(
-			Band(this._rainbow[1], true, false, BiQuadraticFilter.Type.LOW_SHELF, 30.0, -12.0, 0.707,  96000.0)
+			Band(this._bounds, this._rainbow[1], true, false, BiQuadraticFilter.Type.LOW_SHELF, 30.0, -12.0, 0.707)
 		)
 		this._bands.add(
-			Band(this._rainbow[2], true, false, BiQuadraticFilter.Type.BELL, 5000.0, 6.0, 1.2,  96000.0)
+			Band(this._bounds, this._rainbow[2], true, false, BiQuadraticFilter.Type.BELL, 5000.0, 6.0, 1.2)
 		)
 		this._bands.add(
-			Band(this._rainbow[3], true, false, BiQuadraticFilter.Type.BELL, 1500.0, 9.0, 4.0,  96000.0)
+			Band(this._bounds, this._rainbow[3], true, false, BiQuadraticFilter.Type.BELL, 1500.0, 9.0, 4.0)
 		)
 		this._bands.add(
-			Band(this._rainbow[4], true, false, BiQuadraticFilter.Type.NOTCH, 200.0, 3.0, 0.707,  96000.0)
+			Band(this._bounds, this._rainbow[4], true, false, BiQuadraticFilter.Type.NOTCH, 200.0, 3.0, 0.707)
 		)
 		this._bands.add(
-			Band(this._rainbow[5], false, false, BiQuadraticFilter.Type.BAND_PASS, 1000.0, 3.0, 4.0,  96000.0)
+			Band(this._bounds, this._rainbow[5], false, false, BiQuadraticFilter.Type.BAND_PASS, 1000.0, 3.0, 4.0)
 		)
 	}
 
@@ -683,35 +844,34 @@ class Equalizer : View
 		val colorTransparent = this.context.getColor(android.R.color.transparent)
 		val topShader = LinearGradient(
 			0f,
-			Bounds.topWithPadding,
+			this._bounds.topWithPadding,
 			0f,
-			Bounds.top,
+			this._bounds.top,
 			color,
 			colorTransparent,
 			Shader.TileMode.CLAMP
 		)
 		val bottomShader = LinearGradient(
 			0f,
-			Bounds.heightTwoThirdWithPadding,
+			this._bounds.heightTwoThirdWithPadding,
 			0f,
-			Bounds.height,
+			this._bounds.height,
 			color,
 			colorTransparent,
 			Shader.TileMode.CLAMP
 		)
 		val leftShader = LinearGradient(
-			Bounds.leftWithPadding,
+			this._bounds.leftWithPadding,
 			0f,
-			Bounds.left,
+			this._bounds.left,
 			0f,
-			color,
-			colorTransparent,
+			color, colorTransparent,
 			Shader.TileMode.CLAMP
 		)
 		val rightShader = LinearGradient(
-			Bounds.widthWithPadding,
+			this._bounds.widthWithPadding,
 			0f,
-			Bounds.width,
+			this._bounds.width,
 			0f,
 			color,
 			colorTransparent,
@@ -733,8 +893,8 @@ class Equalizer : View
 	{
 		val color = this._primaryTraceColor
 		val backgroundColor = this._primaryTraceColor
-		this._traceShader = Equalizer.shaderFactory(color)
-		this._traceBackgroundShader = Equalizer.shaderFactory(backgroundColor)
+		this._traceShader = Equalizer.shaderFactory(color, this._bounds)
+		this._traceBackgroundShader = Equalizer.shaderFactory(backgroundColor, this._bounds)
 	}
 
 	private fun setSecondaryTracesShader()
@@ -753,7 +913,13 @@ class Equalizer : View
 	)
 	{
 		super.onSizeChanged(w, h, oldw, oldh)
-		Bounds.setBounds(this, 64f.fromDp(), 64f.fromDp(), 64f.fromDp(), 32f.fromDp())
+		this._bounds.setBounds(
+			this,
+			this._gridPaddingLeft,
+			this._gridPaddingTop,
+			this._gridPaddingRight,
+			this._gridPaddingBottom
+		)
 		this.setGridLinesShader()
 		this.setPrimaryTraceShader()
 		this.setSecondaryTracesShader()
@@ -781,22 +947,22 @@ class Equalizer : View
 		val initial = this._ticksXAxisPoints.toMutableList()
 		initial.removeFirst()
 		initial.removeLast()
-		val beforeSubset = this._ticksXAxisPoints.subList(0, 10)
+		val beforeSubset = this._ticksXAxisPoints.subList(0, 10) // select 10Hz -> 100Hz
 		val before = beforeSubset
-			.map { point -> point - (beforeSubset.last() - Bounds.leftWithPadding) }
-			.filter { point -> point >= Bounds.left }
-		val afterSubset = this._ticksXAxisPoints.subList(1, 10)
+			.map { point -> point - (beforeSubset.last() - this._bounds.leftWithPadding) }
+			.filter { point -> point >= this._bounds.left }
+		val afterSubset = this._ticksXAxisPoints.subList(1, 10) // select 20Hz -> 100Hz
 		val after = afterSubset
-			.map { point -> point + (Bounds.widthWithPadding - afterSubset.first()) }
-			.filter { point -> point <= Bounds.width }
+			.map { point -> point + (this._bounds.widthWithPadding - afterSubset.first()) }
+			.filter { point -> point <= this._bounds.width }
 		val points = listOf(initial, after, before).flatten()
 		for(x in points)
 		{
 			this._gridLines.add(
 				x,
-				Bounds.top,
+				this._bounds.top,
 				x,
-				Bounds.height
+				this._bounds.height
 			)
 		}
 	}
@@ -804,23 +970,23 @@ class Equalizer : View
 	private fun onDrawTicksY()
 	{
 		// TODO pre calculate this
-		val frame = Bounds.heightTwoThirdWithPadding - Bounds.topWithPadding
+		val frame = this._bounds.heightTwoThirdWithPadding - this._bounds.topWithPadding
 		val initial = this._ticksYAxisPoints.toMutableList()
 		initial.removeFirst()
 		initial.removeLast()
 		val before = this._ticksYAxisPoints
 			.map { point -> point - frame }
-			.filter { point -> point >= Bounds.top }
+			.filter { point -> point >= this._bounds.top }
 		val after = this._ticksYAxisPoints
 			.map { point -> point + frame }
-			.filter { point -> point <= Bounds.height }
+			.filter { point -> point <= this._bounds.height }
 		val points = listOf(initial, after, before).flatten()
 		for(y in points)
 		{
 			this._gridLines.add(
-				Bounds.left,
+				this._bounds.left,
 				y,
-				Bounds.width,
+				this._bounds.width,
 				y
 			)
 		}
@@ -846,10 +1012,10 @@ class Equalizer : View
 				label,
 				this._ticksXAxis.labelsMinimum,
 				this._ticksXAxis.labelsMaximum,
-				Bounds.leftWithPadding,
-				Bounds.widthWithPadding
+				this._bounds.leftWithPadding,
+				this._bounds.widthWithPadding
 			)
-			val y = Bounds.height - this._labelXPadding
+			val y = this._bounds.height - this._labelXPadding
 			val point = this._painter.textAlignCenter(x, y, string)
 			canvas.drawText(string, point.x, point.y, this._painter)
 		}
@@ -877,13 +1043,13 @@ class Equalizer : View
 					"$tickInt"
 				}
 			}
-			val x = Bounds.width - this._labelYPadding
+			val x = this._bounds.width - this._labelYPadding
 			val y = MathUtils.map(
 				tick,
 				this._ticksYAxis.ticksMinimum,
 				this._ticksYAxis.ticksMaximum,
-				Bounds.topWithPadding,
-				Bounds.heightTwoThirdWithPadding
+				this._bounds.topWithPadding,
+				this._bounds.heightTwoThirdWithPadding
 			)
 			var point = this._painter.textAlignLeft(x, y, string)
 			point = this._painter.textAlignVerticalCenter(point.x, point.y, string)
@@ -893,6 +1059,10 @@ class Equalizer : View
 	
 	private fun onDrawTraces(canvas: Canvas)
 	{
+		if(this._bands.isEmpty())
+		{
+			return
+		}
 		this._painter.style = Paint.Style.STROKE
 		this._painter.strokeWidth = this._secondaryTraceStrokeWidth
 		for(band in this._bands)
@@ -922,19 +1092,19 @@ class Equalizer : View
 			// group by frequency
 			.groupBy { x -> x.first }
 			// sum amplitudes and compute float points to grid points
-			.map { x -> Band.compute(x.key, x.value.sumByDouble { it.second }) }
+			.map { x -> Band.compute(x.key, x.value.sumByDouble { it.second }, this._bounds) }
 			.toMutableList()
-		this._path.rewind()
-		this._path.fromPoints(points)
+		this._primaryTrace.rewind()
+		this._primaryTrace.fromPoints(points)
 		this._painter.style = Paint.Style.STROKE
 		this._painter.color = this._primaryTraceColor
 		this._painter.strokeWidth = this._primaryTraceStrokeWidth
 		this._painter.shader = this._traceShader
-		canvas.drawPath(this._path, this._painter)
+		canvas.drawPath(this._primaryTrace, this._painter)
 		this._painter.shader = null
 		// compute the two following lines even if a band is selected, that for path rewind efficiency
-		this._path.lineToBaseline(points, Bounds.halfHeightTwoThirdWithPadding)
-		this._path.close()
+		this._primaryTrace.lineToBaseline(points, this._bounds.halfHeightTwoThirdWithPadding)
+		this._primaryTrace.close()
 		if(bandSelected)
 		{
 			return
@@ -942,35 +1112,16 @@ class Equalizer : View
 		this._painter.style = Paint.Style.FILL
 		this._painter.color = this._primaryTraceColor.toTransparent(0.09f)
 		this._painter.shader = this._traceBackgroundShader
-		canvas.drawPath(this._path, this._painter)
+		canvas.drawPath(this._primaryTrace, this._painter)
 		this._painter.shader = null
 	}
 
 	private fun onDrawSelectedTrace(canvas: Canvas, band: Band)
 	{
-		when(band.filter.type)
-		{
-			BiQuadraticFilter.Type.BAND_PASS ->
-			{
-				band.path.close()
-			}
-			BiQuadraticFilter.Type.LOW_PASS ->
-			{
-				band.path.lineToMinimal(band.points)
-			}
-			BiQuadraticFilter.Type.HIGH_PASS ->
-			{
-				band.path.lineToMaximal(band.points)
-			}
-			else ->
-			{
-				band.path.lineToBaseline(band.points, Bounds.halfHeightTwoThirdWithPadding)
-			}
-		}
 		this._painter.style = Paint.Style.FILL
 		this._painter.color = band.backgroundColor
 		this._painter.shader = band.backgroundShader
-		canvas.drawPath(band.path, this._painter)
+		canvas.drawPath(band.backgroundPath, this._painter)
 		this._painter.shader = null
 	}
 
@@ -981,7 +1132,7 @@ class Equalizer : View
 		{
 			this._painter.style = Paint.Style.FILL
 			this._painter.color = band.bubbleColor
-			when(band.filter.type)
+			when(band.type)
 			{
 				BiQuadraticFilter.Type.LOW_PASS,
 				BiQuadraticFilter.Type.HIGH_PASS,
@@ -989,7 +1140,7 @@ class Equalizer : View
 				run {
 					val y = if(band.bubble.y.isNaN())
 					{
-						Bounds.height
+						this._bounds.height
 					}
 					else
 					{
@@ -1000,13 +1151,13 @@ class Equalizer : View
 						band.bubble.x,
 						y,
 						band.bubble.x,
-						Bounds.halfHeightTwoThirdWithPadding,
+						this._bounds.halfHeightTwoThirdWithPadding,
 						this._painter
 					)
 					this._painter.shader = null
 					canvas.drawCircle(
 						band.bubble.x,
-						Bounds.halfHeightTwoThirdWithPadding,
+						this._bounds.halfHeightTwoThirdWithPadding,
 						this._bubbleSize,
 						this._painter
 					)
@@ -1018,7 +1169,7 @@ class Equalizer : View
 					this._painter.color = this._primaryTraceColor
 					canvas.drawCircle(
 						band.bubble.x,
-						Bounds.halfHeightTwoThirdWithPadding,
+						this._bounds.halfHeightTwoThirdWithPadding,
 						this._bubbleSize,
 						this._painter
 					)
