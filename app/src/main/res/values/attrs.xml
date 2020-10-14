@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="bubbleSize" format="dimension"/>
     <declare-styleable name="Visualizer">
         <attr name="normalize" format="boolean"/>
         <attr name="color" format="color"/>
@@ -26,6 +27,21 @@
         <attr name="labelYColor" format="color"/>
         <attr name="labelYSize" format="dimension"/>
         <attr name="labelYPadding" format="dimension"/>
-        <attr name="bubbleSize" format="dimension"/>
+        <attr name="bubbleSize"/>
+    </declare-styleable>
+    <declare-styleable name="Knob">
+        <attr name="android:enabled" />
+        <attr name="backgroundTraceColor" format="color"/>
+        <attr name="foregroundTraceColor" format="color"/>
+        <attr name="traceStrokeWidth" format="dimension"/>
+        <attr name="bubbleSize"/>
+        <attr name="minimumValue" format="float"/>
+        <attr name="maximumValue" format="float"/>
+        <attr name="value" format="float"/>
+        <attr name="name" format="string"/>
+        <attr name="nameSize" format="dimension"/>
+        <attr name="minimumValueLabel" format="string"/>
+        <attr name="maximumValueLabel" format="string"/>
+        <attr name="labelSize" format="dimension"/>
     </declare-styleable>
 </resources>

@@ -13,15 +13,81 @@
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="match_parent"/>-->
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/eq1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp">
-        <midoriiro.madfx.audio.equalizers.Equalizer
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="1dp" />
-    </com.google.android.material.card.MaterialCardView>
+<!--    <com.google.android.material.card.MaterialCardView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_margin="16dp">-->
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+<!--            <midoriiro.madfx.audio.equalizers.Equalizer-->
+<!--                android:id="@+id/eq1"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:padding="1dp" />-->
+<!--            <midoriiro.madfx.audio.equalizers.EqualizerControlPanel-->
+<!--                android:padding="10dp"-->
+<!--                android:layout_marginBottom="50dp"-->
+<!--                android:layout_width="300dp"-->
+<!--                android:layout_height="125dp"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintLeft_toLeftOf="parent"-->
+<!--                app:layout_constraintRight_toRightOf="parent"/>-->
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+<!--    </com.google.android.material.card.MaterialCardView>-->
+
+    <midoriiro.madfx.core.components.Knob
+        android:id="@+id/frequency"
+        android:enabled="true"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/gain"
+        app:name="Frequency"
+        app:nameSize="20sp"
+        app:minimumValue="10"
+        app:maximumValue="30000"
+        app:value="19166.5648564"
+        app:minimumValueLabel="10 Hz"
+        app:maximumValueLabel="30 kHz"/>
+
+    <midoriiro.madfx.core.components.Knob
+        android:id="@+id/gain"
+        android:enabled="true"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/frequency"
+        app:layout_constraintRight_toLeftOf="@id/width"
+        app:name="Gain"
+        app:nameSize="20sp"
+        app:minimumValue="-30"
+        app:maximumValue="30"
+        app:value="25"
+        app:minimumValueLabel="-30"
+        app:maximumValueLabel="+30"/>
+
+    <midoriiro.madfx.core.components.Knob
+        android:id="@+id/width"
+        android:enabled="true"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/gain"
+        app:layout_constraintRight_toRightOf="parent"
+        app:name="Q"
+        app:nameSize="20sp"
+        app:minimumValue="0.025"
+        app:maximumValue="40"
+        app:value="10"
+        app:minimumValueLabel="0.025"
+        app:maximumValueLabel="40"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
