@@ -10,6 +10,7 @@ import midoriiro.madfx.audio.equalizers.filters.BiQuadraticFilter
 import midoriiro.madfx.core.Application
 import midoriiro.madfx.core.collections.LineArray
 import midoriiro.madfx.core.colors.Rainbow
+import midoriiro.madfx.core.components.RelativeBounds
 import midoriiro.madfx.core.extensions.*
 import midoriiro.madfx.core.utils.MathUtils
 import kotlin.math.log10
@@ -17,45 +18,12 @@ import kotlin.math.pow
 
 class Equalizer : View
 {
-	open class Bounds
+	private class Bounds : RelativeBounds()
 	{
-		protected val _bounds = RectF()
-		protected var _width = 0f
-		protected var _widthWithPadding = 0f
-		protected var _halfWidth = 0f
-		protected var _height = 0f
-		protected var _heightWithPadding = 0f
-		protected var _halfHeight = 0f
-		protected var _heightTwoThird = 0f
-		protected var _heightTwoThirdWithPadding = 0f
-		protected var _halfHeightTwoThird = 0f
-		protected var _halfHeightTwoThirdWithPadding = 0f
-		protected var _top = 0f
-		protected var _topWithPadding = 0f
-		protected var _bottom = 0f
-		protected var _bottomWithPadding = 0f
-		protected var _left = 0f
-		protected var _leftWithPadding = 0f
-		protected var _right = 0f
-		protected var _rightWithPadding = 0f
-
-		val width: Float
-			get() = this._width
-
-		val widthWithPadding: Float
-			get() = this._widthWithPadding
-
-		val halfWidth: Float
-			get() = this._halfWidth
-
-		val height: Float
-			get() = this._height
-
-		val heightWithPadding: Float
-			get() = this._heightWithPadding
-
-		val halfHeight: Float
-			get() = this._halfHeight
+		private var _heightTwoThird = 0f
+		private var _heightTwoThirdWithPadding = 0f
+		private var _halfHeightTwoThird = 0f
+		private var _halfHeightTwoThirdWithPadding = 0f
 
 		val heightTwoThird: Float
 			get() = this._heightTwoThird
@@ -69,34 +37,7 @@ class Equalizer : View
 		val halfHeightTwoThirdWithPadding: Float
 			get() = this._halfHeightTwoThirdWithPadding
 
-		val top: Float
-			get() = this._top
-
-		val topWithPadding: Float
-			get() = this._topWithPadding
-
-		val bottom: Float
-			get() = this._bottom
-
-		val bottomWithPadding: Float
-			get() = this._bottomWithPadding
-
-		val left: Float
-			get() = this._left
-
-		val leftWithPadding: Float
-			get() = this._leftWithPadding
-
-		val right: Float
-			get() = this._right
-
-		val rightWithPadding: Float
-			get() = this._rightWithPadding
-	}
-
-	private class InternalBounds : Bounds()
-	{
-		fun setBounds(
+		override fun setBounds(
 			view: View,
 			paddingLeft: Float,
 			paddingTop: Float,
@@ -104,29 +45,11 @@ class Equalizer : View
 			paddingBottom: Float
 		)
 		{
-			val minX = (view.left + view.paddingLeft).toFloat()
-			val maxX = (view.width).toFloat()
-			val minY = (view.top + view.paddingTop).toFloat()
-			val maxY = (view.height).toFloat()
-			this._bounds.set(minX, minY, maxX, maxY)
-			this._width = this._bounds.width()
-			this._widthWithPadding = this._width - paddingRight
-			this._halfWidth = this._width / 2f
-			this._height = this._bounds.height()
-			this._heightWithPadding = this._height - paddingBottom
-			this._halfHeight = this._height / 2f
-			this._top = this._bounds.top
-			this._topWithPadding = this._top + paddingTop
-			this._bottom = this._bounds.bottom
-			this._bottomWithPadding = this._bottom - paddingBottom
-			this._left = this._bounds.left
-			this._leftWithPadding = this._left + paddingLeft
-			this._right = this._bounds.right
-			this._rightWithPadding = this._right - paddingRight
-			this._heightTwoThird = this._height / 3f * 2f
-			this._heightTwoThirdWithPadding = this._heightWithPadding / 3f * 2f
+			super.setBounds(view, paddingLeft, paddingTop, paddingRight, paddingBottom)
+			this._heightTwoThird = this.height / 3f * 2f
+			this._heightTwoThirdWithPadding = this.heightWithPadding / 3f * 2f
 			this._halfHeightTwoThird = this._heightTwoThird / 2f + paddingTop / 2f
-			this._halfHeightTwoThirdWithPadding = this._heightTwoThirdWithPadding / 2f + this._topWithPadding / 2f
+			this._halfHeightTwoThirdWithPadding = this._heightTwoThirdWithPadding / 2f + this.topWithPadding / 2f
 		}
 	}
 	
@@ -649,7 +572,7 @@ class Equalizer : View
 	}
 
 	private val _adapter = BandFilterAdapter()
-	private val _bounds = InternalBounds()
+	private val _bounds = Bounds()
 	private val _ticksXAxis = TicksXAxis()
 	private val _ticksYAxis = TicksYAxis()
 	private lateinit var _ticksXAxisPoints: List<Float>
@@ -681,9 +604,6 @@ class Equalizer : View
 
 	val adapter: BandFilterAdapter
 		get() = this._adapter
-
-	val bounds: Bounds
-		get() = this._bounds
 	
 	constructor(
 		context: Context, attrs: AttributeSet
