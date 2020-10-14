@@ -32,6 +32,7 @@ An Android application to handle your Bluetooth devices audio configuration (vol
 	 - [ ] Parametric view
 	 - [ ] Simple curve view (linear scale)
 	 - [ ] Curve view (log10 scale)
+	    - [ ] Control Panel (Band type, frequency, gain, Q)
 	 - [ ] Find a solution to handle 10+ bands frequencies independent of the device
 	    - [x] BiQuadraticFilter (perfect for drawing curve, need to test with subclass AudioEffect class)
  - [ ] Volumes view
@@ -42,6 +43,11 @@ An Android application to handle your Bluetooth devices audio configuration (vol
 	 - [ ] Virtualization
 	 - [ ] Loudness
 	 - [ ] Bass boost
+ - [ ] Knob component
+    - [x] Drawing
+    - [ ] Touch Event
+    - [ ] Value formatter
+    - [ ] Middle point scale (use case, Q scale 0.025 -> 1.0 -> 40 where 1.0 is middle point)
  - [ ] Presets (Normal, Rock, Jazz, ...)
  - [ ] Profiles management
 	 - [ ] Store profile locally
