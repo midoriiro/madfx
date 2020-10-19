@@ -9,6 +9,8 @@ An Android application to handle your Bluetooth devices audio configuration (vol
 
 ![equalizer](./images/equalizer.gif)
 
+![equalizer](./images/knob.png)
+
 ## Todo list
 
  - [ ] Documentations
