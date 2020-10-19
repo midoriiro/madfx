@@ -11,7 +11,7 @@ import android.content.IntentFilter
 import android.util.Log
 
 
-class BluetoothHeadsetBroadcastReceiver : BroadcastReceiver(), midoriiro.madfx.core.interfaces.BroadcastReceiver
+class BluetoothHeadsetBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core.interfaces.BroadcastReceiver
 {
     private val filter = IntentFilter()
 

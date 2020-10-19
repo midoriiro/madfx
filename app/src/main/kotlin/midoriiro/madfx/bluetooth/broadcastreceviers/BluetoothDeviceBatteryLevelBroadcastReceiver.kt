@@ -8,7 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 
 
-class BluetoothDeviceBatteryLevelBroadcastReceiver : BroadcastReceiver(), midoriiro.madfx.core.interfaces.BroadcastReceiver
+class BluetoothDeviceBatteryLevelBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core.interfaces.BroadcastReceiver
 {
     private val ACTION_BATTERY_LEVEL_CHANGED = "android.bluetooth.device.action.BATTERY_LEVEL_CHANGED"
     private val EXTRA_BATTERY_LEVEL = "android.bluetooth.device.extra.BATTERY_LEVEL"

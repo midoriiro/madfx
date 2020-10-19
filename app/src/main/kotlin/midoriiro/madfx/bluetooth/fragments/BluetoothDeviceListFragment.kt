@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import midoriiro.madfx.R
-import midoriiro.madfx.core.decorations.MarginGridItemDecoration
-import midoriiro.madfx.core.decorations.MarginListItemDecoration
+import midoriiro.io.core.decorations.MarginGridItemDecoration
+import midoriiro.io.core.decorations.MarginListItemDecoration
 import midoriiro.madfx.databinding.FragmentBluetoothDeviceListBinding
 import midoriiro.madfx.bluetooth.events.BluetoothStateEvent
 import midoriiro.madfx.bluetooth.services.BluetoothService

@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
-import midoriiro.madfx.core.utils.MathUtils
+import midoriiro.io.core.utils.MathUtils
 import kotlin.math.abs
 import kotlin.math.ceil
 

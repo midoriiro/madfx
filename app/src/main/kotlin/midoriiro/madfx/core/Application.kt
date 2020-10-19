@@ -6,7 +6,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothHeadset
 import android.bluetooth.BluetoothProfile
 
-class Application : Application()
+class Application : midoriiro.io.core.Application()
 {
 	private var _headsetProfile: BluetoothHeadset? = null
 	private var _a2dpProfile: BluetoothA2dp? = null
@@ -16,7 +16,7 @@ class Application : Application()
 	
 	val a2dpProfile: BluetoothA2dp?
 		get() = this._a2dpProfile
-	
+
 	companion object Singleton
 	{
 		lateinit var instance: midoriiro.madfx.core.Application
@@ -25,7 +25,7 @@ class Application : Application()
 	override fun onCreate() {
 		super.onCreate()
 		instance = this
-		
+
 		BluetoothAdapter.getDefaultAdapter().getProfileProxy(
 			this.applicationContext,
 			object: BluetoothProfile.ServiceListener{

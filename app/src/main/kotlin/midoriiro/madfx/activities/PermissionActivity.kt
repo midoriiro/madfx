@@ -17,7 +17,7 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import kotlinx.android.synthetic.main.permissions_actions.view.*
 import midoriiro.madfx.R
-import midoriiro.madfx.core.extensions.requestPermission
+import midoriiro.io.core.extensions.requestPermission
 import midoriiro.madfx.databinding.ActivityPermissionsBinding
 import midoriiro.madfx.permissions.PermissionService
 

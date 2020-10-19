@@ -8,7 +8,7 @@ import android.location.LocationManager
 import midoriiro.madfx.location.services.LocationService
 
 
-class LocationServiceStateBroadcastReceiver : BroadcastReceiver(), midoriiro.madfx.core.interfaces.BroadcastReceiver
+class LocationServiceStateBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core.interfaces.BroadcastReceiver
 {
     private val filter = IntentFilter()
     var onStateChanged: ((Boolean) -> Unit)? = null

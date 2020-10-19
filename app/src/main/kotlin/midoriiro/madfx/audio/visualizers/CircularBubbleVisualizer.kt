@@ -6,8 +6,8 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.PointF
 import android.util.AttributeSet
-import midoriiro.madfx.core.extensions.toRadians
-import midoriiro.madfx.core.utils.MathUtils
+import midoriiro.io.core.extensions.toRadians
+import midoriiro.io.core.utils.MathUtils
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.cos

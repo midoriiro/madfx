@@ -8,7 +8,7 @@ import android.view.View
 import midoriiro.madfx.R
 import midoriiro.madfx.audio.events.WaveFormDataCaptureEvent
 import midoriiro.madfx.audio.services.VisualizerService
-import midoriiro.madfx.core.extensions.toTransparent
+import midoriiro.io.core.extensions.toTransparent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import kotlin.math.sqrt

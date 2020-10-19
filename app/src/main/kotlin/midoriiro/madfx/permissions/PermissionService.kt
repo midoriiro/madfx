@@ -7,7 +7,7 @@ import midoriiro.madfx.location.broadcastreceivers.LocationServiceStateBroadcast
 import midoriiro.madfx.location.services.LocationService
 import midoriiro.madfx.bluetooth.broadcastreceviers.BluetoothStateBroadcastReceiver
 import midoriiro.madfx.bluetooth.services.BluetoothService
-import midoriiro.madfx.core.extensions.hasPermission
+import midoriiro.io.core.extensions.hasPermission
 
 class PermissionService(private val context: Context)
 {

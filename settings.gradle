@@ -1,2 +1,4 @@
+include ':library:core'
+include ':library:material:knob'
 include ':app'
 rootProject.name = "Mad Fx"

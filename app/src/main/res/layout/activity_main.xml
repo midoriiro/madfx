@@ -36,7 +36,7 @@
 <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 <!--    </com.google.android.material.card.MaterialCardView>-->
 
-    <midoriiro.madfx.core.components.Knob
+    <midoriiro.io.material.knob.views.Knob
         android:id="@+id/frequency"
         android:enabled="true"
         android:layout_width="200dp"
@@ -52,9 +52,9 @@
         app:maximumValue="30000"
         app:value="19166.5648564"
         app:minimumValueLabel="10 Hz"
-        app:maximumValueLabel="30 kHz"/>
+        app:maximumValueLabel="30 kHz" />
 
-    <midoriiro.madfx.core.components.Knob
+    <midoriiro.io.material.knob.views.Knob
         android:id="@+id/gain"
         android:enabled="true"
         android:layout_width="200dp"
@@ -68,13 +68,13 @@
         app:nameSize="20sp"
         app:minimumValue="-30"
         app:maximumValue="30"
-        app:value="25"
+        app:value="0"
         app:minimumValueLabel="-30"
         app:maximumValueLabel="+30"/>
 
-    <midoriiro.madfx.core.components.Knob
+    <midoriiro.io.material.knob.views.Knob
         android:id="@+id/width"
-        android:enabled="true"
+        android:enabled="false"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:padding="16dp"

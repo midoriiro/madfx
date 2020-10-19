@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Knob">
+        <attr name="android:enabled" />
+        <attr name="traceStrokeWidth" format="dimension"/>
+        <attr name="bubbleSize" format="dimension"/>
+        <attr name="minimumValue" format="float"/>
+        <attr name="maximumValue" format="float"/>
+        <attr name="value" format="float"/>
+        <attr name="name" format="string"/>
+        <attr name="nameSize" format="dimension"/>
+        <attr name="minimumValueLabel" format="string"/>
+        <attr name="maximumValueLabel" format="string"/>
+        <attr name="labelSize" format="dimension"/>
+        <attr name="formatter" format="string"/>
+    </declare-styleable>
+</resources>

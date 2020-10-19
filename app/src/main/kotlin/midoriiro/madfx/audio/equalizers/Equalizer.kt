@@ -4,15 +4,16 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import midoriiro.io.core.Application.Singleton.instance
 import midoriiro.madfx.R
 import midoriiro.madfx.audio.equalizers.adapters.BandFilterAdapter
 import midoriiro.madfx.audio.equalizers.filters.BiQuadraticFilter
 import midoriiro.madfx.core.Application
-import midoriiro.madfx.core.collections.LineArray
-import midoriiro.madfx.core.colors.Rainbow
-import midoriiro.madfx.core.components.RelativeBounds
-import midoriiro.madfx.core.extensions.*
-import midoriiro.madfx.core.utils.MathUtils
+import midoriiro.io.core.collections.LineArray
+import midoriiro.io.core.colors.Rainbow
+import midoriiro.io.core.components.RelativeBounds
+import midoriiro.io.core.extensions.*
+import midoriiro.io.core.utils.MathUtils
 import kotlin.math.log10
 import kotlin.math.pow
 

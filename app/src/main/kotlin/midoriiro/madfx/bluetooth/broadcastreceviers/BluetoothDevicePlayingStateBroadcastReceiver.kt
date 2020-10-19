@@ -9,7 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 
-class BluetoothDevicePlayingStateBroadcastReceiver : BroadcastReceiver(), midoriiro.madfx.core.interfaces.BroadcastReceiver
+class BluetoothDevicePlayingStateBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core.interfaces.BroadcastReceiver
 {
     private val filter = IntentFilter()
     var onPlayingStateChanged: ((BluetoothDevice, Int) -> Unit)? = null
