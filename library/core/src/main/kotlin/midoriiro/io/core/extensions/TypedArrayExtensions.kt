@@ -24,3 +24,8 @@ inline fun <reified T: Any> TypedArray.getClass(index: Int, defValue: KClass<T>)
 		T::class.createFromString(className)
 	}
 }
+
+fun TypedArray.getLong(index: Int, defValue: Int): Long
+{
+	return this.getInt(index, defValue).toLong()
+}

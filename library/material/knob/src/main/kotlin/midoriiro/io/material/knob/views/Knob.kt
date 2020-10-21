@@ -1,13 +1,17 @@
 package midoriiro.io.material.knob.views
 
+import android.animation.FloatEvaluator
+import android.animation.TimeInterpolator
+import android.animation.TypeEvaluator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import midoriiro.io.core.colors.Palette
 import midoriiro.io.core.components.RelativeBounds
 import midoriiro.io.core.extensions.*
@@ -18,8 +22,6 @@ import midoriiro.io.material.knob.R
 import midoriiro.io.material.knob.enums.GestureOrientation
 import midoriiro.io.material.knob.formatters.KnobDefaultValueFormatter
 import midoriiro.io.material.knob.interfaces.KnobValueFormatter
-import kotlin.math.abs
-import kotlin.math.sign
 
 class Knob : View
 {
@@ -81,22 +83,26 @@ class Knob : View
 
 		override fun onUp(event: MotionEvent): Boolean
 		{
+			this@Knob.requestDisallowParentTouchEvent(false)
 			return true
 		}
 
 		override fun onDown(event: MotionEvent): Boolean
 		{
+			this@Knob.requestDisallowParentTouchEvent(true)
 			return true
 		}
 
 		override fun onSingleTapConfirmed(event: MotionEvent): Boolean
 		{
+			val value = this@Knob._value
 			if(!this.onTwoAxis(event))
 			{
 				return false
 			}
 			this.clamp()
-			this@Knob.invalidate()
+			this@Knob._animator.setFloatValues(value, this@Knob._value)
+			this@Knob._animator.start()
 			return true
 		}
 
@@ -133,9 +139,11 @@ class Knob : View
 
 		override fun onDoubleTapEvent(event: MotionEvent): Boolean
 		{
+			val value = this@Knob._value
 			this@Knob._value = this@Knob._defaultValue
 			this.clamp()
-			this@Knob.invalidate()
+			this@Knob._animator.setFloatValues(value, this@Knob._value)
+			this@Knob._animator.start()
 			return true
 		}
 	}
@@ -151,6 +159,7 @@ class Knob : View
 
 	private val _gestureListener = GestureListener()
 	private val _gestureDetector = GestureDetector(this.context, this._gestureListener)
+	private val _animator = ValueAnimator()
 	private val _palette = Palette(this)
 	private val _painter = Paint(Paint.ANTI_ALIAS_FLAG)
 	private val _bounds = RelativeBounds()
@@ -170,6 +179,9 @@ class Knob : View
 	private var _labelSize = 0f
 	private lateinit var _formatter: KnobValueFormatter
 	private var _gestureOrientation = GestureOrientation.Horizontal
+	private var _animationDuration = 0L
+	private lateinit var _animationInterpolator: TimeInterpolator
+	private lateinit var _animationEvaluator: TypeEvaluator<*>
 
 	constructor(
 		context: Context, attrs: AttributeSet
@@ -267,7 +279,45 @@ class Knob : View
 			GestureOrientation.Horizontal
 		)
 
+		this._animationDuration = typedArray.getLong(
+			R.styleable.Knob_animationDuration,
+			300
+		)
+
+		this._animationInterpolator = typedArray.getClass(
+			R.styleable.Knob_animationInterpolator,
+			FastOutSlowInInterpolator::class
+		)
+
+		this._animationEvaluator = typedArray.getClass(
+			R.styleable.Knob_animationEvaluator,
+			FloatEvaluator::class
+		)
+
 		typedArray.recycle()
+
+		this._animator.duration = this._animationDuration
+		this._animator.interpolator = this._animationInterpolator
+		this._animator.setEvaluator(this._animationEvaluator)
+		this._animator.addUpdateListener { animator ->
+			val value = animator.animatedValue as Float
+			this._value = value
+			this.invalidate()
+		}
+	}
+
+	private fun requestDisallowParentTouchEvent(state: Boolean)
+	{
+		if(this.parent != null)
+		{
+			this.parent.requestDisallowInterceptTouchEvent(state)
+		}
+	}
+
+	override fun onDetachedFromWindow()
+	{
+		super.onDetachedFromWindow()
+		this._animator.cancel()
 	}
 
 	override fun onSizeChanged(

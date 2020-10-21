@@ -19,5 +19,8 @@
             <enum name="vertical" value="1"/>
             <enum name="circular" value="2"/>
         </attr>
+        <attr name="animationDuration"/>
+        <attr name="animationInterpolator"/>
+        <attr name="animationEvaluator"/>
     </declare-styleable>
 </resources>

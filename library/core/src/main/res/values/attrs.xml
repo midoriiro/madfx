@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="animationDuration" format="integer"/>
+    <attr name="animationInterpolator" format="string"/>
+    <attr name="animationEvaluator" format="string"/>
+</resources>
