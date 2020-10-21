@@ -5,25 +5,152 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
+import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import midoriiro.io.core.colors.Palette
 import midoriiro.io.core.components.RelativeBounds
 import midoriiro.io.core.extensions.*
+import midoriiro.io.core.gestures.GestureDetector
+import midoriiro.io.core.gestures.SimpleOnGestureListener
 import midoriiro.io.core.utils.MathUtils
 import midoriiro.io.material.knob.R
+import midoriiro.io.material.knob.enums.GestureOrientation
 import midoriiro.io.material.knob.formatters.KnobDefaultValueFormatter
 import midoriiro.io.material.knob.interfaces.KnobValueFormatter
+import kotlin.math.abs
+import kotlin.math.sign
 
 class Knob : View
 {
+	private inner class GestureListener : SimpleOnGestureListener()
+	{
+		private fun clamp()
+		{
+			when
+			{
+				this@Knob._value > this@Knob._maximumValue -> this@Knob._value = this@Knob._maximumValue
+				this@Knob._value < this@Knob._minimumValue -> this@Knob._value = this@Knob._minimumValue
+			}
+		}
+
+		private fun onOneAxis(delta: Float): Float
+		{
+			val angle = MathUtils.map(
+				this@Knob._value,
+				this@Knob._minimumValue,
+				this@Knob._maximumValue,
+				MINIMUM_ANGLE,
+				MAXIMUM_ANGLE
+			)
+			return MathUtils.map(
+				angle + delta,
+				MINIMUM_ANGLE,
+				MAXIMUM_ANGLE,
+				this@Knob._minimumValue,
+				this@Knob._maximumValue
+			)
+		}
+
+		private fun onTwoAxis(event: MotionEvent): Boolean
+		{
+			val angle = MathUtils
+				.angle(
+					this@Knob._traceMinimum.x,
+					this@Knob._traceMinimum.y,
+					event.x,
+					event.y,
+					this@Knob._bounds.halfWidth,
+					this@Knob._bounds.halfHeight
+				)
+				.toClockwise()
+				.plus(MINIMUM_ANGLE)
+			if(angle !in RANGE_ANGLE)
+			{
+				return false
+			}
+			this@Knob._value = MathUtils.map(
+				angle,
+				MINIMUM_ANGLE,
+				MAXIMUM_ANGLE,
+				this@Knob._minimumValue,
+				this@Knob._maximumValue
+			)
+			return true
+		}
+
+		override fun onUp(event: MotionEvent): Boolean
+		{
+			return true
+		}
+
+		override fun onDown(event: MotionEvent): Boolean
+		{
+			return true
+		}
+
+		override fun onSingleTapConfirmed(event: MotionEvent): Boolean
+		{
+			if(!this.onTwoAxis(event))
+			{
+				return false
+			}
+			this.clamp()
+			this@Knob.invalidate()
+			return true
+		}
+
+		override fun onScroll(
+			event1: MotionEvent,
+			event2: MotionEvent,
+			distanceX: Float,
+			distanceY: Float
+		): Boolean
+		{
+			this@Knob._value = when (this@Knob._gestureOrientation)
+			{
+				GestureOrientation.Horizontal ->
+				{
+					this.onOneAxis(-distanceX)
+				}
+				GestureOrientation.Vertical ->
+				{
+					this.onOneAxis(distanceY)
+				}
+				GestureOrientation.Circular ->
+				{
+					if(!this.onTwoAxis(event2))
+					{
+						return false
+					}
+					this@Knob._value
+				}
+			}
+			this.clamp()
+			this@Knob.invalidate()
+			return true
+		}
+
+		override fun onDoubleTapEvent(event: MotionEvent): Boolean
+		{
+			this@Knob._value = this@Knob._defaultValue
+			this.clamp()
+			this@Knob.invalidate()
+			return true
+		}
+	}
+
 	private companion object
 	{
 		const val MINIMUM_ANGLE = 135f
 		const val MAXIMUM_ANGLE = 405f
+		val RANGE_ANGLE = MINIMUM_ANGLE..MAXIMUM_ANGLE
 		const val MINIMUM_SWEEP_ANGLE = 0f
 		const val MAXIMUM_SWEEP_ANGLE = 270f
 	}
 
+	private val _gestureListener = GestureListener()
+	private val _gestureDetector = GestureDetector(this.context, this._gestureListener)
 	private val _palette = Palette(this)
 	private val _painter = Paint(Paint.ANTI_ALIAS_FLAG)
 	private val _bounds = RelativeBounds()
@@ -35,12 +162,14 @@ class Knob : View
 	private var _minimumValue = 0f
 	private var _maximumValue = 0f
 	private var _value = 0f
+	private var _defaultValue = 0f
 	private var _name: String? = null
 	private var _nameSize = 0f
 	private var _minimumValueLabel: String? = null
 	private var _maximumValueLabel: String? = null
 	private var _labelSize = 0f
 	private lateinit var _formatter: KnobValueFormatter
+	private var _gestureOrientation = GestureOrientation.Horizontal
 
 	constructor(
 		context: Context, attrs: AttributeSet
@@ -101,6 +230,11 @@ class Knob : View
 			50f
 		)
 
+		this._defaultValue = typedArray.getFloat(
+			R.styleable.Knob_defaultValue,
+			50f
+		)
+
 		this._name = typedArray.getString(
 			R.styleable.Knob_name
 		)
@@ -123,18 +257,15 @@ class Knob : View
 			14f.fromSp()
 		)
 
-		val formatterClass = typedArray.getString(
-			R.styleable.Knob_formatter
+		this._formatter = typedArray.getClass(
+			R.styleable.Knob_formatter,
+			KnobDefaultValueFormatter::class
 		)
 
-		if(formatterClass.isNullOrEmpty())
-		{
-			this._formatter = KnobDefaultValueFormatter()
-		}
-		else
-		{
-			this._formatter = KnobValueFormatter::class.createFromString(formatterClass)
-		}
+		this._gestureOrientation = typedArray.getEnum(
+			R.styleable.Knob_gestureOrientation,
+			GestureOrientation.Horizontal
+		)
 
 		typedArray.recycle()
 	}
@@ -175,6 +306,16 @@ class Knob : View
 			this._bounds.halfHeight,
 			MAXIMUM_ANGLE
 		))
+	}
+
+	override fun onTouchEvent(event: MotionEvent): Boolean
+	{
+		return when
+		{
+			!this.isEnabled -> false
+			this._gestureDetector.onTouchEvent(event) -> true
+			else -> super.onTouchEvent(event)
+		}
 	}
 
 	override fun onDraw(canvas: Canvas)

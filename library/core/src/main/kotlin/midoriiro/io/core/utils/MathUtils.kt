@@ -1,9 +1,9 @@
 package midoriiro.io.core.utils
 
 import android.graphics.PointF
+import midoriiro.io.core.extensions.toDegrees
 import midoriiro.io.core.extensions.toRadians
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.*
 
 class MathUtils
 {
@@ -34,6 +34,21 @@ class MathUtils
 			val x2 = x1 * cos - y1 * sin
 			val y2 = x1 * sin + y1 * cos
 			return PointF(x2 + cx, y2 + cy)
+		}
+
+		fun angle(x1: Float, y1: Float, x2: Float, y2: Float, cx: Float, cy: Float): Float
+		{
+			val p1 = atan2(y1 - cy, x1 - cx)
+			val p2 = atan2(y2 - cy, x2 - cx)
+			val angle = (p1 - p2).toDegrees()
+			return if(angle < 0)
+			{
+				angle + 360f
+			}
+			else
+			{
+				angle
+			}
 		}
 	}
 }

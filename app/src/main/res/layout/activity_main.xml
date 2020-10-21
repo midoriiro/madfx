@@ -51,6 +51,7 @@
         app:minimumValue="10"
         app:maximumValue="30000"
         app:value="19166.5648564"
+        app:defaultValue="1000"
         app:minimumValueLabel="10 Hz"
         app:maximumValueLabel="30 kHz" />
 
@@ -69,8 +70,10 @@
         app:minimumValue="-30"
         app:maximumValue="30"
         app:value="0"
+        app:defaultValue="0"
         app:minimumValueLabel="-30"
-        app:maximumValueLabel="+30"/>
+        app:maximumValueLabel="+30"
+        app:gestureOrientation="vertical"/>
 
     <midoriiro.io.material.knob.views.Knob
         android:id="@+id/width"
@@ -87,6 +90,7 @@
         app:minimumValue="0.025"
         app:maximumValue="40"
         app:value="10"
+        app:defaultValue="1"
         app:minimumValueLabel="0.025"
         app:maximumValueLabel="40"/>
 
