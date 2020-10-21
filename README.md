@@ -47,7 +47,7 @@ An Android application to handle your Bluetooth devices audio configuration (vol
 	 - [ ] Bass boost
  - [ ] Knob component
     - [x] Drawing
-    - [x] Touch Event
+    - [x] Touch events (scroll, single tap, double tab)
     - [x] Value formatter
     - [ ] Middle point scale (use case, Q scale 0.025 -> 1.0 -> 40 where 1.0 is middle point)
  - [ ] Presets (Normal, Rock, Jazz, ...)
