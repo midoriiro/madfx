@@ -70,7 +70,8 @@
         app:middleValues="0"
         app:value="0"
         app:defaultValue="0"
-        app:gestureOrientation="vertical"/>
+        app:gestureOrientation="vertical"
+        app:traceOrientation="bipolar"/>
 
     <midoriiro.io.material.knob.views.Knob
         android:id="@+id/width"

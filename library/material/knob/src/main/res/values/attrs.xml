@@ -19,6 +19,10 @@
             <enum name="vertical" value="1"/>
             <enum name="circular" value="2"/>
         </attr>
+        <attr name="traceOrientation" format="enum">
+            <enum name="clockwise" value="0"/>
+            <enum name="bipolar" value="1"/>
+        </attr>
         <attr name="animationDuration"/>
         <attr name="animationInterpolator"/>
         <attr name="animationEvaluator"/>

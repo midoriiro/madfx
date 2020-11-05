@@ -20,6 +20,7 @@ import midoriiro.io.core.gestures.SimpleOnGestureListener
 import midoriiro.io.core.utils.MathUtils
 import midoriiro.io.material.knob.R
 import midoriiro.io.material.knob.enums.GestureOrientation
+import midoriiro.io.material.knob.enums.TraceOrientation
 import midoriiro.io.material.knob.formatters.KnobDefaultLabelFormatter
 import midoriiro.io.material.knob.formatters.KnobDefaultValueFormatter
 import midoriiro.io.material.knob.interfaces.KnobLabelFormatter
@@ -229,6 +230,7 @@ class Knob : View
 	private companion object
 	{
 		const val MINIMUM_ANGLE = 135f
+		const val MIDDLE_ANGLE = 270f
 		const val MAXIMUM_ANGLE = 405f
 		const val DEAD_ZONE_SWEEP_ANGLE = 360f - (MAXIMUM_ANGLE - MINIMUM_ANGLE)
 		const val HALF_DEAD_ZONE_SWEEP_ANGLE = DEAD_ZONE_SWEEP_ANGLE / 2F
@@ -259,6 +261,7 @@ class Knob : View
 	private lateinit var _valueFormatter: KnobValueFormatter
 	private lateinit var _labelFormatter: KnobLabelFormatter
 	private var _gestureOrientation = GestureOrientation.Horizontal
+	private var _traceOrientation = TraceOrientation.Clockwise
 	private var _animationDuration = 0L
 	private lateinit var _animationInterpolator: TimeInterpolator
 	private lateinit var _animationEvaluator: TypeEvaluator<*>
@@ -359,6 +362,11 @@ class Knob : View
 		this._gestureOrientation = typedArray.getEnum(
 			R.styleable.Knob_gestureOrientation,
 			GestureOrientation.Horizontal
+		)
+
+		this._traceOrientation = typedArray.getEnum(
+			R.styleable.Knob_traceOrientation,
+			TraceOrientation.Clockwise
 		)
 
 		this._animationDuration = typedArray.getLong(
@@ -500,13 +508,29 @@ class Knob : View
 			MINIMUM_SWEEP_ANGLE,
 			MAXIMUM_SWEEP_ANGLE
 		)
-		canvas.drawArc(
-			this._bounds.relativeRectangleWithPadding,
-			MINIMUM_ANGLE,
-			angle,
-			false,
-			this._painter
-		)
+		when (this._traceOrientation)
+		{
+			TraceOrientation.Clockwise ->
+			{
+				canvas.drawArc(
+					this._bounds.relativeRectangleWithPadding,
+					MINIMUM_ANGLE,
+					angle,
+					false,
+					this._painter
+				)
+			}
+			TraceOrientation.Bipolar ->
+			{
+				canvas.drawArc(
+					this._bounds.relativeRectangleWithPadding,
+					MIDDLE_ANGLE,
+					angle - MINIMUM_ANGLE,
+					false,
+					this._painter
+				)
+			}
+		}
 	}
 
 	private fun onDrawBubble(canvas: Canvas)
