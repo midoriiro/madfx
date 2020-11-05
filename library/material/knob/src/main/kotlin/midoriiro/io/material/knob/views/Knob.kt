@@ -606,7 +606,7 @@ class Knob : View
 		this._painter.color = this._palette.getTextColorFromState(this._palette.onSurface.toMediumEmphasis())
 		this._painter.textSize = this._labelSize
 		this._painter.textAlign = Paint.Align.LEFT
-		val string = this._labelFormatter.minimum(this._maximumValue)
+		val string = this._labelFormatter.maximum(this._maximumValue)
 		var point = this._painter.textAlignCenter(
 			this._traceMaximum.x,
 			(this.height - this._traceMaximum.y) / 2f + this._traceMaximum.y,
@@ -661,7 +661,7 @@ class Knob : View
 			this._painter.color = this._palette.getTextColorFromState(this._palette.onSurface.toMediumEmphasis())
 			this._painter.textSize = this._labelSize
 			this._painter.textAlign = Paint.Align.LEFT
-			val string = this._labelFormatter.minimum(this._middleValues!![index])
+			val string = this._labelFormatter.format(this._middleValues!![index])
 			val bounds = this._painter.textBounds(string)
 			val diagonal = PointF(bounds.right - bounds.centerX(), bounds.bottom - bounds.centerY()).magnitude()
 			val length = diagonal + this._bubbleSize

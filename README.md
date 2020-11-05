@@ -9,7 +9,7 @@ An Android application to handle your Bluetooth devices audio configuration (vol
 
 ![equalizer](./images/equalizer.gif)
 
-![equalizer](./images/knob.png)
+![knobs](./images/knobs.png)
 
 ## Todo list
 
@@ -48,6 +48,9 @@ An Android application to handle your Bluetooth devices audio configuration (vol
  - [x] Knob component
     - [x] Drawing
     - [x] Touch events (scroll, single tap, double tab)
+       - [x] Horizontal
+       - [x] Vertical
+       - [x] Circular
     - [x] Value formatter
     - [x] Label formatter
     - [x] Middle point scale (use case, Q scale 0.025 -> 1.0 -> 40 where 1.0 is middle point)
