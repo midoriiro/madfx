@@ -3,6 +3,7 @@ package midoriiro.io.core.extensions
 import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.Rect
+import android.graphics.RectF
 
 private val bounds = Rect()
 
@@ -39,4 +40,15 @@ fun Paint.textAlignLeft(x: Float, y: Float, text: String): PointF
 fun Paint.textAlignRight(x: Float, y: Float, text: String): PointF
 {
 	return PointF(x, y)
+}
+
+fun Paint.textBounds(text: String): RectF
+{
+	this.getTextBounds(text, 0, text.length, bounds)
+	return RectF(
+		bounds.left.toFloat(),
+		bounds.top.toFloat(),
+		bounds.right.toFloat(),
+		bounds.bottom.toFloat()
+	)
 }

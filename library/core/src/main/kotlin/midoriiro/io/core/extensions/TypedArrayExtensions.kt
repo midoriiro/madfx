@@ -29,3 +29,16 @@ fun TypedArray.getLong(index: Int, defValue: Int): Long
 {
 	return this.getInt(index, defValue).toLong()
 }
+
+fun TypedArray.getFloatArrayOrNull(index: Int): FloatArray?
+{
+	val string = this.getString(index)
+	if(string.isNullOrEmpty())
+	{
+		return null
+	}
+	return string
+		.split(",")
+		.map { it.trim().toFloat() }
+		.toFloatArray()
+}

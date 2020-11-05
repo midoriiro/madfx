@@ -6,6 +6,7 @@
         <attr name="bubbleSize" format="dimension"/>
         <attr name="minimumValue" format="float"/>
         <attr name="maximumValue" format="float"/>
+        <attr name="middleValues" format="string"/>
         <attr name="defaultValue" format="float"/>
         <attr name="value" format="float"/>
         <attr name="name" format="string"/>

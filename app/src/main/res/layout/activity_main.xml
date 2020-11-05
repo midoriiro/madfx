@@ -69,6 +69,7 @@
         app:nameSize="20sp"
         app:minimumValue="-30"
         app:maximumValue="30"
+        app:middleValues="0"
         app:value="0"
         app:defaultValue="0"
         app:minimumValueLabel="-30"
@@ -77,7 +78,7 @@
 
     <midoriiro.io.material.knob.views.Knob
         android:id="@+id/width"
-        android:enabled="false"
+        android:enabled="true"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:padding="16dp"
@@ -89,9 +90,11 @@
         app:nameSize="20sp"
         app:minimumValue="0.025"
         app:maximumValue="40"
-        app:value="10"
+        app:middleValues="1"
+        app:value="1"
         app:defaultValue="1"
         app:minimumValueLabel="0.025"
-        app:maximumValueLabel="40"/>
+        app:maximumValueLabel="40"
+        app:gestureOrientation="circular"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
