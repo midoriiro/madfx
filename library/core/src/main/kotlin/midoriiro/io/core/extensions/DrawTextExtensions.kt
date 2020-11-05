@@ -13,7 +13,7 @@ private val bounds = Rect()
 fun Paint.textAlignCenter(x: Float, y: Float, text: String): PointF
 {
 	this.getTextBounds(text, 0, text.length, bounds)
-	return PointF(x - bounds.width() / 2f, y)
+	return PointF(x - bounds.exactCenterX(), y)
 }
 
 /**

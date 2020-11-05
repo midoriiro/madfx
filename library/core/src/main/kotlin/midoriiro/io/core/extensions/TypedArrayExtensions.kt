@@ -12,12 +12,12 @@ inline fun <reified T: Enum<T>> TypedArray.getEnum(index: Int, defValue: T): T
 	)]
 }
 
-inline fun <reified T: Any> TypedArray.getClass(index: Int, defValue: KClass<T>): T
+inline fun <reified T: Any> TypedArray.getClass(index: Int, defValue: KClass<*>): T
 {
 	val className = this.getString(index)
 	return if(className.isNullOrEmpty())
 	{
-		defValue.createInstance()
+		defValue.createInstance() as T
 	}
 	else
 	{

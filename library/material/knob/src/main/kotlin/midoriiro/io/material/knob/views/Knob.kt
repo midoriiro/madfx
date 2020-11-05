@@ -20,7 +20,9 @@ import midoriiro.io.core.gestures.SimpleOnGestureListener
 import midoriiro.io.core.utils.MathUtils
 import midoriiro.io.material.knob.R
 import midoriiro.io.material.knob.enums.GestureOrientation
+import midoriiro.io.material.knob.formatters.KnobDefaultLabelFormatter
 import midoriiro.io.material.knob.formatters.KnobDefaultValueFormatter
+import midoriiro.io.material.knob.interfaces.KnobLabelFormatter
 import midoriiro.io.material.knob.interfaces.KnobValueFormatter
 
 class Knob : View
@@ -253,10 +255,9 @@ class Knob : View
 	private var _defaultValue = 0f
 	private var _name: String? = null
 	private var _nameSize = 0f
-	private var _minimumValueLabel: String? = null
-	private var _maximumValueLabel: String? = null
 	private var _labelSize = 0f
-	private lateinit var _formatter: KnobValueFormatter
+	private lateinit var _valueFormatter: KnobValueFormatter
+	private lateinit var _labelFormatter: KnobLabelFormatter
 	private var _gestureOrientation = GestureOrientation.Horizontal
 	private var _animationDuration = 0L
 	private lateinit var _animationInterpolator: TimeInterpolator
@@ -285,8 +286,6 @@ class Knob : View
 
 	private fun init(attrs: AttributeSet, defStyle: Int)
 	{
-		val theme = this.context.theme
-
 		val typedArray = context.obtainStyledAttributes(
 			attrs, R.styleable.Knob, defStyle, 0
 		)
@@ -342,22 +341,19 @@ class Knob : View
 			14f.fromSp()
 		)
 
-		this._minimumValueLabel = typedArray.getString(
-			R.styleable.Knob_minimumValueLabel
-		)
-
-		this._maximumValueLabel = typedArray.getString(
-			R.styleable.Knob_maximumValueLabel
-		)
-
 		this._labelSize = typedArray.getDimension(
 			R.styleable.Knob_labelSize,
 			14f.fromSp()
 		)
 
-		this._formatter = typedArray.getClass(
-			R.styleable.Knob_formatter,
+		this._valueFormatter = typedArray.getClass(
+			R.styleable.Knob_valueFormatter,
 			KnobDefaultValueFormatter::class
+		)
+
+		this._labelFormatter = typedArray.getClass(
+			R.styleable.Knob_labelFormatter,
+			KnobDefaultLabelFormatter::class
 		)
 
 		this._gestureOrientation = typedArray.getEnum(
@@ -562,48 +558,42 @@ class Knob : View
 
 	private fun onDrawMinimumValueLabel(canvas: Canvas)
 	{
-		if(this._minimumValueLabel == null)
-		{
-			return
-		}
 		this._painter.style = Paint.Style.FILL
 		this._painter.color = this._palette.getTextColorFromState(this._palette.onSurface.toMediumEmphasis())
 		this._painter.textSize = this._labelSize
 		this._painter.textAlign = Paint.Align.LEFT
+		val string = this._labelFormatter.minimum(this._minimumValue)
 		var point = this._painter.textAlignCenter(
 			this._traceMinimum.x,
 			(this.height - this._traceMinimum.y) / 2f + this._traceMinimum.y,
-			this._minimumValueLabel!!
+			string
 		)
 		point = this._painter.textAlignVerticalCenter(
 			point.x,
 			point.y,
-			this._minimumValueLabel!!
+			string
 		)
-		canvas.drawText(this._minimumValueLabel!!, point.x, point.y, this._painter)
+		canvas.drawText(string, point.x, point.y, this._painter)
 	}
 
 	private fun onDrawMaximumValueLabel(canvas: Canvas)
 	{
-		if(this._maximumValueLabel == null)
-		{
-			return
-		}
 		this._painter.style = Paint.Style.FILL
 		this._painter.color = this._palette.getTextColorFromState(this._palette.onSurface.toMediumEmphasis())
 		this._painter.textSize = this._labelSize
 		this._painter.textAlign = Paint.Align.LEFT
+		val string = this._labelFormatter.minimum(this._maximumValue)
 		var point = this._painter.textAlignCenter(
 			this._traceMaximum.x,
 			(this.height - this._traceMaximum.y) / 2f + this._traceMaximum.y,
-			this._maximumValueLabel!!
+			string
 		)
 		point = this._painter.textAlignVerticalCenter(
 			point.x,
 			point.y,
-			this._maximumValueLabel!!
+			string
 		)
-		canvas.drawText(this._maximumValueLabel!!, point.x, point.y, this._painter)
+		canvas.drawText(string, point.x, point.y, this._painter)
 	}
 
 	private fun onDrawMiddlePointsLabel(canvas: Canvas)
@@ -620,7 +610,10 @@ class Knob : View
 		val center = PointF(this._bounds.halfWidth, this._bounds.halfHeight)
 		for(index in this._middleValues!!.indices)
 		{
-			val value = this._middleValues!![index].toString()
+			this._painter.style = Paint.Style.STROKE
+			this._painter.color = this._palette.getStrokeColorFromState(this._palette.onSurface.toLowEmphasis())
+			this._painter.strokeWidth = this._traceStrokeWidth
+			this._painter.strokeCap = Paint.Cap.SQUARE
 			val position = (index + 1f) * step
 			val angle = MathUtils.map(
 				position,
@@ -638,29 +631,28 @@ class Knob : View
 					angle
 				)
 				.distance(center, this._traceStrokeWidth)
-			var point = origin.distance(center, this._bubbleSize)
-			this._painter.style = Paint.Style.STROKE
-			this._painter.color = this._palette.getStrokeColorFromState(this._palette.onSurface.toLowEmphasis())
-			this._painter.strokeWidth = this._traceStrokeWidth
-			this._painter.strokeCap = Paint.Cap.SQUARE
-			canvas.drawLine(origin.x, origin.y, point.x, point.y, this._painter)
-			point = this._painter.textAlignCenter(
-				point.x,
-				point.y,
-				value
-			)
-			point = this._painter.textAlignVerticalCenter(
-				point.x,
-				point.y,
-				value
-			)
-			val bounds = this._painter.textBounds(value)
-			point = point.distance(center, bounds.width())
+			val tick = origin.distance(center, this._bubbleSize)
+			canvas.drawLine(origin.x, origin.y, tick.x, tick.y, this._painter)
 			this._painter.style = Paint.Style.FILL
 			this._painter.color = this._palette.getTextColorFromState(this._palette.onSurface.toMediumEmphasis())
 			this._painter.textSize = this._labelSize
 			this._painter.textAlign = Paint.Align.LEFT
-			canvas.drawText(value, point.x, point.y, this._painter)
+			val string = this._labelFormatter.minimum(this._middleValues!![index])
+			val bounds = this._painter.textBounds(string)
+			val diagonal = PointF(bounds.right - bounds.centerX(), bounds.bottom - bounds.centerY()).magnitude()
+			val length = diagonal + this._bubbleSize
+			var label = tick.distance(center, length)
+			label = this._painter.textAlignCenter(
+				label.x,
+				label.y,
+				string
+			)
+			label = this._painter.textAlignVerticalCenter(
+				label.x,
+				label.y,
+				string
+			)
+			canvas.drawText(string, label.x, label.y, this._painter)
 		}
 	}
 
@@ -670,7 +662,7 @@ class Knob : View
 		this._painter.color = this._palette.getTextColorFromState(this._palette.onSurface.toMediumEmphasis())
 		this._painter.textSize = this._labelSize
 		this._painter.textAlign = Paint.Align.LEFT
-		val string = this._formatter.format(this._value)
+		val string = this._valueFormatter.format(this._value)
 		var point = this._painter.textAlignCenter(
 			this._bounds.halfWidth,
 			this._traceMinimum.y,

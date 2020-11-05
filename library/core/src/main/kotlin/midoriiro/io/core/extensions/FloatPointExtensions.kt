@@ -22,6 +22,11 @@ fun PointF.magnitude(): Float
     return sqrt((this.x * this.x) + (this.y * this.y))
 }
 
+fun PointF.distance(target: PointF): Float
+{
+    return (target - this).magnitude()
+}
+
 fun PointF.distance(target: PointF, distance: Float): PointF
 {
     if(distance <= 1)

@@ -11,10 +11,9 @@
         <attr name="value" format="float"/>
         <attr name="name" format="string"/>
         <attr name="nameSize" format="dimension"/>
-        <attr name="minimumValueLabel" format="string"/>
-        <attr name="maximumValueLabel" format="string"/>
         <attr name="labelSize" format="dimension"/>
-        <attr name="formatter" format="string"/>
+        <attr name="valueFormatter" format="string"/>
+        <attr name="labelFormatter" format="string"/>
         <attr name="gestureOrientation" format="enum">
             <enum name="horizontal" value="0"/>
             <enum name="vertical" value="1"/>
