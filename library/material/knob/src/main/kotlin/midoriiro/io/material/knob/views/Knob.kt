@@ -258,6 +258,7 @@ class Knob : View
 	private var _name: String? = null
 	private var _nameSize = 0f
 	private var _labelSize = 0f
+	private var _showLabels = true
 	private lateinit var _valueFormatter: KnobValueFormatter
 	private lateinit var _labelFormatter: KnobLabelFormatter
 	private var _gestureOrientation = GestureOrientation.Horizontal
@@ -347,6 +348,11 @@ class Knob : View
 		this._labelSize = typedArray.getDimension(
 			R.styleable.Knob_labelSize,
 			14f.fromSp()
+		)
+
+		this._showLabels = typedArray.getBoolean(
+			R.styleable.Knob_showLabels,
+			true
 		)
 
 		this._valueFormatter = typedArray.getClass(
@@ -582,6 +588,10 @@ class Knob : View
 
 	private fun onDrawMinimumValueLabel(canvas: Canvas)
 	{
+		if(!this._showLabels)
+		{
+			return
+		}
 		this._painter.style = Paint.Style.FILL
 		this._painter.color = this._palette.getTextColorFromState(this._palette.onSurface.toMediumEmphasis())
 		this._painter.textSize = this._labelSize
@@ -602,6 +612,10 @@ class Knob : View
 
 	private fun onDrawMaximumValueLabel(canvas: Canvas)
 	{
+		if(!this._showLabels)
+		{
+			return
+		}
 		this._painter.style = Paint.Style.FILL
 		this._painter.color = this._palette.getTextColorFromState(this._palette.onSurface.toMediumEmphasis())
 		this._painter.textSize = this._labelSize
@@ -622,7 +636,7 @@ class Knob : View
 
 	private fun onDrawMiddlePointsLabel(canvas: Canvas)
 	{
-		if(this._middleValues == null)
+		if(this._middleValues == null || !this._showLabels)
 		{
 			return
 		}
@@ -682,6 +696,10 @@ class Knob : View
 
 	private fun onDrawValue(canvas: Canvas)
 	{
+		if(!this._showLabels)
+		{
+			return
+		}
 		this._painter.style = Paint.Style.FILL
 		this._painter.color = this._palette.getTextColorFromState(this._palette.onSurface.toMediumEmphasis())
 		this._painter.textSize = this._labelSize

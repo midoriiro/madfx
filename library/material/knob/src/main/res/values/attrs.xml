@@ -12,6 +12,7 @@
         <attr name="name" format="string"/>
         <attr name="nameSize" format="dimension"/>
         <attr name="labelSize" format="dimension"/>
+        <attr name="showLabels" format="boolean"/>
         <attr name="valueFormatter" format="string"/>
         <attr name="labelFormatter" format="string"/>
         <attr name="gestureOrientation" format="enum">
