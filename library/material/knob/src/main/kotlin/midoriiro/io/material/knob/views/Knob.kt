@@ -71,10 +71,10 @@ class Knob : View
 
 		override fun onSingleTapConfirmed(event: MotionEvent): Boolean
 		{
-			val value = this@Knob._value
-			this@Knob._value = this.onTwoAxis(event)
-			this@Knob.clamp()
-			this@Knob._animator.setFloatValues(value, this@Knob._value)
+			this@Knob._animator.setFloatValues(
+				this@Knob._valueEvaluator.fromValue(this@Knob._value),
+				this@Knob._valueEvaluator.fromValue(this.onTwoAxis(event))
+			)
 			this@Knob._animator.start()
 			return true
 		}
@@ -99,10 +99,10 @@ class Knob : View
 
 		override fun onDoubleTapEvent(event: MotionEvent): Boolean
 		{
-			val value = this@Knob._value
-			this@Knob._value = this@Knob._defaultValue
-			this@Knob.clamp()
-			this@Knob._animator.setFloatValues(value, this@Knob._value)
+			this@Knob._animator.setFloatValues(
+				this@Knob._valueEvaluator.fromValue(this@Knob._value),
+				this@Knob._valueEvaluator.fromValue(this@Knob._defaultValue)
+			)
 			this@Knob._animator.start()
 			return true
 		}
@@ -390,8 +390,8 @@ class Knob : View
 		this._animator.interpolator = this._animationInterpolator
 		this._animator.setEvaluator(this._animationEvaluator)
 		this._animator.addUpdateListener { animator ->
-			val value = animator.animatedValue as Float
-			this._value = value
+			val angle = animator.animatedValue as Float
+			this._value = this._valueEvaluator.fromAngle(angle)
 			this.clamp()
 			this.invalidate()
 		}
