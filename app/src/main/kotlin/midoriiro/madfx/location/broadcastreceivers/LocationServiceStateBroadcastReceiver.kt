@@ -1,16 +1,14 @@
 package midoriiro.madfx.location.broadcastreceivers
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.location.LocationManager
+import midoriiro.io.core.receivers.BroadcastReceiver
 import midoriiro.madfx.location.services.LocationService
 
 
-class LocationServiceStateBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core.interfaces.BroadcastReceiver
+class LocationServiceStateBroadcastReceiver : BroadcastReceiver()
 {
-    private val filter = IntentFilter()
     var onStateChanged: ((Boolean) -> Unit)? = null
     
     private val _service: LocationService by lazy {
@@ -19,7 +17,7 @@ class LocationServiceStateBroadcastReceiver : BroadcastReceiver(), midoriiro.io.
 
     init
     {
-        this.filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION)
+        this._filter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION)
     }
 
     override fun onReceive(context: Context, intent: Intent)
@@ -29,10 +27,5 @@ class LocationServiceStateBroadcastReceiver : BroadcastReceiver(), midoriiro.io.
             val state = this._service.isEnabled
             this.onStateChanged?.invoke(state)
         }
-    }
-    
-    override fun register(context: Context)
-    {
-        context.registerReceiver(this, this.filter)
     }
 }

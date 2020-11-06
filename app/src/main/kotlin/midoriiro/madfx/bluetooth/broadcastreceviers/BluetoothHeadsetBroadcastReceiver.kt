@@ -4,21 +4,18 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothAssignedNumbers
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothHeadset
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.util.Log
+import midoriiro.io.core.receivers.BroadcastReceiver
 
 
-class BluetoothHeadsetBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core.interfaces.BroadcastReceiver
+class BluetoothHeadsetBroadcastReceiver : BroadcastReceiver()
 {
-    private val filter = IntentFilter()
-
     init
     {
-        this.filter.addAction(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT)
-        this.filter.addCategory(BluetoothHeadset.VENDOR_SPECIFIC_HEADSET_EVENT_COMPANY_ID_CATEGORY + "." + BluetoothAssignedNumbers.APPLE)
+        this._filter.addAction(BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT)
+        this._filter.addCategory(BluetoothHeadset.VENDOR_SPECIFIC_HEADSET_EVENT_COMPANY_ID_CATEGORY + "." + BluetoothAssignedNumbers.APPLE)
     }
     
     fun invoke(context: Context)
@@ -42,10 +39,5 @@ class BluetoothHeadsetBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core
             
             Log.d("FFF", "HSP -> $command $commandType $arguments")
         }
-    }
-    
-    override fun register(context: Context)
-    {
-        context.registerReceiver(this, this.filter)
     }
 }

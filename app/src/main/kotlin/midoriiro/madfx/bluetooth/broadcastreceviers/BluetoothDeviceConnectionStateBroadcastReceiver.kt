@@ -1,22 +1,20 @@
 package midoriiro.madfx.bluetooth.broadcastreceviers
 
 import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
+import midoriiro.io.core.receivers.BroadcastReceiver
 
-class BluetoothDeviceConnectionStateBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core.interfaces.BroadcastReceiver
+class BluetoothDeviceConnectionStateBroadcastReceiver : BroadcastReceiver()
 {
-    private val filter = IntentFilter()
     var onConnectionStateChanged: ((BluetoothDevice, String) -> Unit)? = null
 
     init
     {
-        this.filter.addAction(BluetoothDevice.ACTION_FOUND)
-        this.filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
-        this.filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)
-        this.filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
+        this._filter.addAction(BluetoothDevice.ACTION_FOUND)
+        this._filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
+        this._filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)
+        this._filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
     }
 
     override fun onReceive(context: Context, intent: Intent) 
@@ -39,10 +37,5 @@ class BluetoothDeviceConnectionStateBroadcastReceiver : BroadcastReceiver(), mid
                 this.onConnectionStateChanged?.invoke(device, BluetoothDevice.ACTION_ACL_DISCONNECTED)
             }
         }
-    }
-    
-    override fun register(context: Context)
-    {
-        context.registerReceiver(this, this.filter)
     }
 }

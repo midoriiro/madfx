@@ -1,20 +1,18 @@
 package midoriiro.madfx.bluetooth.broadcastreceviers
 
 import android.bluetooth.BluetoothAdapter
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
+import midoriiro.io.core.receivers.BroadcastReceiver
 
 
-class BluetoothStateBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core.interfaces.BroadcastReceiver
+class BluetoothStateBroadcastReceiver : BroadcastReceiver()
 {
-    private val filter = IntentFilter()
     var onStateChanged: ((Int) -> Unit)? = null
 
     init
     {
-        this.filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+        this._filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
     }
 
     override fun onReceive(context: Context, intent: Intent)
@@ -28,10 +26,5 @@ class BluetoothStateBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core.i
             )
             this.onStateChanged?.invoke(state)
         }
-    }
-    
-    override fun register(context: Context)
-    {
-        context.registerReceiver(this, this.filter)
     }
 }

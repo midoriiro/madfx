@@ -4,19 +4,17 @@ import android.bluetooth.BluetoothA2dp
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothProfile
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
+import midoriiro.io.core.receivers.BroadcastReceiver
 
-class BluetoothDevicePlayingStateBroadcastReceiver : BroadcastReceiver(), midoriiro.io.core.interfaces.BroadcastReceiver
+class BluetoothDevicePlayingStateBroadcastReceiver : BroadcastReceiver()
 {
-    private val filter = IntentFilter()
     var onPlayingStateChanged: ((BluetoothDevice, Int) -> Unit)? = null
 
     init
     {
-        this.filter.addAction(BluetoothA2dp.ACTION_PLAYING_STATE_CHANGED)
+        this._filter.addAction(BluetoothA2dp.ACTION_PLAYING_STATE_CHANGED)
     }
 
     override fun onReceive(context: Context, intent: Intent)
@@ -31,10 +29,5 @@ class BluetoothDevicePlayingStateBroadcastReceiver : BroadcastReceiver(), midori
             )
             this.onPlayingStateChanged?.invoke(device, state)
         }
-    }
-    
-    override fun register(context: Context)
-    {
-        context.registerReceiver(this, this.filter)
     }
 }
