@@ -18,6 +18,11 @@ apply {
 android {
     this.compileSdkVersion(target_sdk_version.toInt())
     this.buildToolsVersion(build_tools_version)
+    this.externalNativeBuild {
+        cmake {
+            this.setPath("CMakeLists.txt")
+        }
+    }
     this.defaultConfig {
         this.minSdkVersion(min_sdk_version.toInt())
         this.targetSdkVersion(target_sdk_version.toInt())
@@ -25,15 +30,76 @@ android {
         this.versionName = version_name
         this.multiDexEnabled = true
         this.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                this.arguments(
+                    "-DANDROID_TOOLCHAIN=clang",
+                    "-DANDROID_PLATFORM=android-${min_sdk_version}",
+                    "-DANDROID_STL=c++_static",
+                    "-DANDROID_CPP_FEATURES=exceptions rtti",
+                    "-DANDROID_ARM_MODE=arm",
+                    "-DANDROID_ARM_NEON=TRUE",
+                    "-DCMAKE_CXX_STANDARD=14",
+                    "-DCMAKE_CXX_EXTENSIONS=OFF"
+                )
+            }
+        }
     }
     this.buildTypes {
         this.getByName("release") {
+            this.initWith(this)
+            this.isDebuggable = false
+            this.isJniDebuggable = false
             this.isMinifyEnabled = true
             this.proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         this.getByName("debug") {
+            this.initWith(this)
+            this.isDebuggable = true
+            this.isJniDebuggable = true
             this.isMinifyEnabled = false
             this.proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    this.flavorDimensions("default")
+    this.productFlavors {
+        this.create("debug_") {
+            this.ndk {
+                this.abiFilters("armeabi-v7a", "x86", "arm64-v8a", "x86_64")
+            }
+            this.externalNativeBuild {
+                this.cmake {
+                    this.arguments(
+                        "-DJUCE_BUILD_CONFIGURATION=DEBUG",
+                        "-DCMAKE_CXX_FLAGS_DEBUG=-O0",
+                        "-DCMAKE_C_FLAGS_DEBUG=-O0"
+                    )
+                }
+            }
+            this.dimension = "default"
+        }
+        this.create("release_") {
+            this.externalNativeBuild {
+                this.cmake {
+                    this.arguments(
+                        "-DJUCE_BUILD_CONFIGURATION=RELEASE",
+                        "-DCMAKE_CXX_FLAGS_RELEASE=-O3",
+                        "-DCMAKE_C_FLAGS_RELEASE=-O3"
+                    )
+                }
+            }
+            this.dimension = "default"
+        }
+    }
+    this.variantFilter {
+        val names = this.flavors.map { it.name }
+        if(names.contains("debug_") && this.buildType.name != "debug")
+        {
+            this.ignore = true
+        }
+        if(names.contains("release_") && this.buildType.name != "release")
+        {
+            this.ignore = true
         }
     }
     this.compileOptions {
