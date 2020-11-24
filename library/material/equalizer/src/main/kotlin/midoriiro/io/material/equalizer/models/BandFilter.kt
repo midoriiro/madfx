@@ -1,27 +1,20 @@
-package midoriiro.madfx.audio.equalizers.models
+package midoriiro.io.material.equalizer.models
 
-import midoriiro.madfx.audio.equalizers.filters.BiQuadraticFilter
+import midoriiro.io.core.audiofx.effects.BiQuadraticFilter
 
 class BandFilter(
-	type: BiQuadraticFilter.Type,
-	frequency: Double,
-	gain: Double,
-	width: Double,
-	rate: Double
+	filter: BiQuadraticFilter
 )
 {
-	private var _isEnabled = false
 	private var _isSelected = false
-	private val _filter = BiQuadraticFilter(
-		type, frequency, gain, width, rate
-	)
+	private val _filter = filter
 
 	var isEnabled: Boolean
 		set(value)
 		{
-			this._isEnabled = value
+			this._filter.enabled = value
 		}
-		get() = this._isEnabled
+		get() = this._filter.enabled
 
 	var isSelected: Boolean
 		set(value)
@@ -58,15 +51,8 @@ class BandFilter(
 		}
 		get() = this._filter.width
 
-	var rate: Double
-		set(value)
-		{
-			this._filter.rate = value
-		}
-		get() = this._filter.rate
-
-	fun filter(sample: Double): Double
+	fun amplitude(frequency: Double): Double
 	{
-		return this._filter.filter(sample)
+		return this._filter.amplitude(frequency)
 	}
 }

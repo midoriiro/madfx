@@ -1,4 +1,4 @@
-package midoriiro.madfx.audio.equalizers
+package midoriiro.io.material.equalizer.views
 
 import android.content.Context
 import android.graphics.Canvas
@@ -7,9 +7,9 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
-import midoriiro.madfx.R
 import midoriiro.io.core.components.RelativeBounds
 import midoriiro.io.core.extensions.fromDp
+import midoriiro.io.material.equalizer.R
 
 class EqualizerControlPanel : View
 {

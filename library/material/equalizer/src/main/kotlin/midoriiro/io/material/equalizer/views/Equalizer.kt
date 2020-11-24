@@ -1,19 +1,20 @@
-package midoriiro.madfx.audio.equalizers
+package midoriiro.io.material.equalizer.views
 
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import midoriiro.io.core.Application.Singleton.instance
-import midoriiro.madfx.R
-import midoriiro.madfx.audio.equalizers.adapters.BandFilterAdapter
-import midoriiro.madfx.audio.equalizers.filters.BiQuadraticFilter
-import midoriiro.madfx.core.Application
+import midoriiro.io.core.Application
+import midoriiro.io.core.audiofx.effects.BiQuadraticFilter
 import midoriiro.io.core.collections.LineArray
+import midoriiro.io.core.colors.Palette
 import midoriiro.io.core.colors.Rainbow
 import midoriiro.io.core.components.RelativeBounds
 import midoriiro.io.core.extensions.*
 import midoriiro.io.core.utils.MathUtils
+import midoriiro.io.material.equalizer.R
+import midoriiro.io.material.equalizer.adapters.BandFilterAdapter
+import midoriiro.io.material.equalizer.models.BandFilter
 import kotlin.math.log10
 import kotlin.math.pow
 
@@ -238,8 +239,8 @@ class Equalizer : View
 						tick,
 						this.ticksMinimum,
 						this.ticksMaximum,
-						_bounds.leftWithPadding,
-						_bounds.widthWithPadding
+						this@Equalizer._bounds.leftWithPadding,
+						this@Equalizer._bounds.widthWithPadding
 					)
 					list.add(x)
 				}
@@ -276,8 +277,8 @@ class Equalizer : View
 						tick,
 						this.ticksMinimum,
 						this.ticksMaximum,
-						_bounds.topWithPadding,
-						_bounds.heightTwoThirdWithPadding
+						this@Equalizer._bounds.topWithPadding,
+						this@Equalizer._bounds.heightTwoThirdWithPadding
 					)
 					list.add(y)
 				}
@@ -288,12 +289,7 @@ class Equalizer : View
 	private class Band(
 		bounds: Bounds,
 		color: Int,
-		enabled: Boolean,
-		selected: Boolean,
-		type: BiQuadraticFilter.Type,
-		frequency: Double,
-		gain: Double,
-		width: Double
+		filter: BandFilter
 	)
 	{
 		companion object
@@ -301,16 +297,12 @@ class Equalizer : View
 			fun compute(frequency: Float, amplitude: Float, bounds: Bounds): PointF
 			{
 				val x = MathUtils.map(
-					log10(frequency),
-					Limits.frequencyLog10Minimum,
-					Limits.frequencyLog10Maximum,
+					log10(frequency), Limits.frequencyLog10Minimum, Limits.frequencyLog10Maximum,
 					bounds.leftWithPadding,
 					bounds.widthWithPadding
 				)
 				val y = MathUtils.map(
-					-amplitude,
-					Limits.gainFloatMinimum,
-					Limits.gainFloatMaximum,
+					-amplitude, Limits.gainFloatMinimum, Limits.gainFloatMaximum,
 					bounds.topWithPadding,
 					bounds.heightTwoThirdWithPadding
 				)
@@ -323,11 +315,7 @@ class Equalizer : View
 			}
 		}
 
-		private val _filter = BiQuadraticFilter(
-			type, frequency, gain, width, 96000.0
-		)
-		private var _isEnabled = enabled
-		private var _isSelected = selected
+		private val _filter = filter
 		private val _bounds = bounds
 		private val _color = color
 		private val _backgroundPath = Path()
@@ -339,48 +327,21 @@ class Equalizer : View
 		private lateinit var _shader: LinearGradient
 
 		var isEnabled: Boolean
-			set(value)
+			set(_)
 			{
-				this._isEnabled = value
 				this.setShaders()
 			}
-			get() = this._isEnabled
+			get() = this._filter.isEnabled
 
 		var isSelected: Boolean
-			set(value)
+			set(_)
 			{
-				this._isSelected = value
 				this.setShaders()
 			}
-			get() = this._isSelected
+			get() = this._filter.isSelected
 
-		var type: BiQuadraticFilter.Type
-			set(value)
-			{
-				this._filter.type = value
-			}
+		val type: BiQuadraticFilter.Type
 			get() = this._filter.type
-
-		var frequency: Double
-			set(value)
-			{
-				this._filter.frequency = value
-			}
-			get() = this._filter.frequency
-
-		var gain: Double
-			set(value)
-			{
-				this._filter.gain = value
-			}
-			get() = this._filter.gain
-
-		var width: Double
-			set(value)
-			{
-				this._filter.width = value
-			}
-			get() = this._filter.width
 
 		val backgroundColor: Int
 			get() = when
@@ -439,12 +400,12 @@ class Equalizer : View
 			for(frequency in Limits.frequencies)
 			{
 				val amplitude = this._filter.amplitude(frequency.toDouble())
-				val point = Band.compute(frequency, amplitude, this._bounds)
+				val point = compute(frequency, amplitude, this._bounds)
 				this._points.add(point)
 				this._amplitudes[frequency] = amplitude
 			}
 			val frequency = this._filter.frequency
-			this._bubble.set(Band.compute(frequency.toFloat(), this._filter.amplitude(frequency), this._bounds))
+			this._bubble.set(compute(frequency.toFloat(), this._filter.amplitude(frequency), this._bounds))
 			this._path.fromPoints(this._points)
 			this._backgroundPath.fromPoints(this._points)
 			when(this.type)
@@ -470,8 +431,8 @@ class Equalizer : View
 
 		fun setShaders()
 		{
-			this._backgroundShader = Equalizer.shaderFactory(this.backgroundColor, this._bounds)
-			this._shader = Equalizer.shaderFactory(this.color, this._bounds)
+			this._backgroundShader = shaderFactory(this.backgroundColor, this._bounds)
+			this._shader = shaderFactory(this.color, this._bounds)
 		}
 	}
 
@@ -479,24 +440,18 @@ class Equalizer : View
 	{
 		override fun onItemInserted(index: Int)
 		{
-			val band = _adapter.get(index)
-			_bands.add(Band(
+			this@Equalizer._bands.add(Band(
 				_bounds,
 				_rainbow[index],
-				band.isEnabled,
-				band.isSelected,
-				band.type,
-				band.frequency,
-				band.gain,
-				band.width
+				this@Equalizer._adapter!!.get(index)
 			))
-			invalidate()
+			this@Equalizer.invalidate()
 		}
 
 		override fun onItemRemoved(index: Int)
 		{
-			_bands.removeAt(index)
-			invalidate()
+			this@Equalizer._bands.removeAt(index)
+			this@Equalizer.invalidate()
 		}
 
 		override fun onItemTypeChanged(
@@ -504,8 +459,7 @@ class Equalizer : View
 			type: BiQuadraticFilter.Type
 		)
 		{
-			_bands[index].type = type
-			invalidate()
+			this@Equalizer.invalidate()
 		}
 
 		override fun onItemFrequencyChanged(
@@ -513,8 +467,7 @@ class Equalizer : View
 			frequency: Double
 		)
 		{
-			_bands[index].frequency = frequency
-			invalidate()
+			this@Equalizer.invalidate()
 		}
 
 		override fun onItemGainChanged(
@@ -522,8 +475,7 @@ class Equalizer : View
 			gain: Double
 		)
 		{
-			_bands[index].gain = gain
-			invalidate()
+			this@Equalizer.invalidate()
 		}
 
 		override fun onItemWidthChanged(
@@ -531,8 +483,7 @@ class Equalizer : View
 			width: Double
 		)
 		{
-			_bands[index].width = width
-			invalidate()
+			this@Equalizer.invalidate()
 		}
 
 		override fun onItemEnabledChanged(
@@ -540,18 +491,18 @@ class Equalizer : View
 			state: Boolean
 		)
 		{
-			_bands[index].isEnabled = state
-			invalidate()
+			this@Equalizer._bands[index].isEnabled = state
+			this@Equalizer.invalidate()
 		}
 
 		override fun onItemSelectionChanged()
 		{
-			for(index in 0 until _adapter.size())
+			for(index in 0 until this@Equalizer._adapter!!.size())
 			{
-				val band = _adapter.get(index)
-				_bands[index].isSelected = band.isSelected
+				val band = this@Equalizer._adapter!!.get(index)
+				this@Equalizer._bands[index].isSelected = band.isSelected
 			}
-			invalidate()
+			this@Equalizer.invalidate()
 		}
 	}
 
@@ -572,7 +523,8 @@ class Equalizer : View
 		}
 	}
 
-	private val _adapter = BandFilterAdapter()
+	private var _adapter: BandFilterAdapter? = null
+	private val _listener = Listener()
 	private val _bounds = Bounds()
 	private val _ticksXAxis = TicksXAxis()
 	private val _ticksYAxis = TicksYAxis()
@@ -580,6 +532,7 @@ class Equalizer : View
 	private lateinit var _ticksYAxisPoints: List<Float>
 	private lateinit var _traceShader: LinearGradient
 	private lateinit var _traceBackgroundShader: LinearGradient
+	private val _palette = Palette(this)
 	private val _painter = Paint(Paint.ANTI_ALIAS_FLAG)
 	private val _gridLines = LineArray()
 	private val _primaryTrace = Path()
@@ -603,7 +556,30 @@ class Equalizer : View
 	private var _labelYPadding = 0f
 	private var _bubbleSize = 0f
 
-	val adapter: BandFilterAdapter
+	var adapter: BandFilterAdapter?
+		set(value)
+		{
+			try
+			{
+				if(this._adapter != null && value == null)
+				{
+					this._adapter!!.removeListener(this._listener)
+				}
+			}
+			catch (exception: UnsupportedOperationException)
+			{
+				// no need to rethrow or do anything with this exception, _listener is not registered at this point.
+			}
+			this._adapter = value
+			try
+			{
+				this._adapter?.addListener(this._listener)
+			}
+			catch (exception: UnsupportedOperationException)
+			{
+				// no need to rethrow or do anything with this exception, _listener is already registered at this point.
+			}
+		}
 		get() = this._adapter
 	
 	constructor(
@@ -633,8 +609,6 @@ class Equalizer : View
 		//  - Same type of shaders inside ComposeShader is unsupported
 		// https://developer.android.com/guide/topics/graphics/hardware-accel.html#unsupported
 		this.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-
-		val theme = this.context.theme
 		
 		val typedArray = context.obtainStyledAttributes(
 			attrs, R.styleable.Equalizer, defStyle, 0
@@ -643,7 +617,7 @@ class Equalizer : View
 		// TODO change default values
 		this._primaryTraceColor = typedArray.getColor(
 			R.styleable.Equalizer_primaryTraceColor,
-			this.resources.getColor(R.color.colorAccent, theme)
+			this._palette.primary
 			// TODO move default values to another place
 		)
 		
@@ -654,7 +628,7 @@ class Equalizer : View
 		
 		this._secondaryTraceColor = typedArray.getColor(
 			R.styleable.Equalizer_secondaryTraceColor,
-			this.resources.getColor(R.color.colorAccent, theme)
+			this._palette.primary
 		)
 		
 		this._secondaryTraceStrokeWidth = typedArray.getDimension(
@@ -664,7 +638,7 @@ class Equalizer : View
 		
 		this._gridColor = typedArray.getColor(
 			R.styleable.Equalizer_gridColor,
-			this.resources.getColor(R.color.material_on_surface_disabled, theme)
+			this._palette.onSurface
 		)
 		
 		this._gridStrokeWidth = typedArray.getDimension(
@@ -694,7 +668,7 @@ class Equalizer : View
 		
 		this._labelXColor = typedArray.getColor(
 			R.styleable.Equalizer_labelXColor,
-			this.resources.getColor(R.color.material_on_surface_disabled, theme)
+			this._palette.onSurface
 		)
 		
 		this._labelXSize = typedArray.getDimension(
@@ -709,7 +683,7 @@ class Equalizer : View
 		
 		this._labelYColor = typedArray.getColor(
 			R.styleable.Equalizer_labelYColor,
-			this.resources.getColor(R.color.material_on_surface_disabled, theme)
+			this._palette.onSurface
 		)
 		
 		this._labelYSize = typedArray.getDimension(
@@ -735,28 +709,26 @@ class Equalizer : View
 
 		this._rainbow.shuffle()
 
-		this._adapter.addListener(Listener())
-
 		// TODO remove this
 		// TODO handle case when bands is empty
-		this._bands.add(
-			Band(this._bounds, this._rainbow[0], true, false, BiQuadraticFilter.Type.LOW_PASS, 19000.0, 3.0, 1.2)
-		)
-		this._bands.add(
-			Band(this._bounds, this._rainbow[1], true, false, BiQuadraticFilter.Type.LOW_SHELF, 30.0, -12.0, 0.707)
-		)
-		this._bands.add(
-			Band(this._bounds, this._rainbow[2], true, false, BiQuadraticFilter.Type.BELL, 5000.0, 6.0, 1.2)
-		)
-		this._bands.add(
-			Band(this._bounds, this._rainbow[3], true, false, BiQuadraticFilter.Type.BELL, 1500.0, 9.0, 4.0)
-		)
-		this._bands.add(
-			Band(this._bounds, this._rainbow[4], true, false, BiQuadraticFilter.Type.NOTCH, 200.0, 3.0, 0.707)
-		)
-		this._bands.add(
-			Band(this._bounds, this._rainbow[5], false, false, BiQuadraticFilter.Type.BAND_PASS, 1000.0, 3.0, 4.0)
-		)
+//		this._bands.add(
+//			Band(this._bounds, this._rainbow[0], true, false, midoriiro.io.core.audiofx.effects.BiQuadraticFilterOld.Type.LOW_PASS, 19000.0, 3.0, 1.2)
+//		)
+//		this._bands.add(
+//			Band(this._bounds, this._rainbow[1], true, false, midoriiro.io.core.audiofx.effects.BiQuadraticFilterOld.Type.LOW_SHELF, 30.0, -12.0, 0.707)
+//		)
+//		this._bands.add(
+//			Band(this._bounds, this._rainbow[2], true, false, midoriiro.io.core.audiofx.effects.BiQuadraticFilterOld.Type.BELL, 5000.0, 6.0, 1.2)
+//		)
+//		this._bands.add(
+//			Band(this._bounds, this._rainbow[3], true, false, midoriiro.io.core.audiofx.effects.BiQuadraticFilterOld.Type.BELL, 1500.0, 9.0, 4.0)
+//		)
+//		this._bands.add(
+//			Band(this._bounds, this._rainbow[4], true, false, midoriiro.io.core.audiofx.effects.BiQuadraticFilterOld.Type.NOTCH, 200.0, 3.0, 0.707)
+//		)
+//		this._bands.add(
+//			Band(this._bounds, this._rainbow[5], false, false, midoriiro.io.core.audiofx.effects.BiQuadraticFilterOld.Type.BAND_PASS, 1000.0, 3.0, 4.0)
+//		)
 	}
 
 	private fun setGridLinesShader()
@@ -814,8 +786,8 @@ class Equalizer : View
 	{
 		val color = this._primaryTraceColor
 		val backgroundColor = this._primaryTraceColor
-		this._traceShader = Equalizer.shaderFactory(color, this._bounds)
-		this._traceBackgroundShader = Equalizer.shaderFactory(backgroundColor, this._bounds)
+		this._traceShader = shaderFactory(color, this._bounds)
+		this._traceBackgroundShader = shaderFactory(backgroundColor, this._bounds)
 	}
 
 	private fun setSecondaryTracesShader()
@@ -1057,8 +1029,7 @@ class Equalizer : View
 			{
 				BiQuadraticFilter.Type.LOW_PASS,
 				BiQuadraticFilter.Type.HIGH_PASS,
-				BiQuadraticFilter.Type.NOTCH ->
-				run {
+				BiQuadraticFilter.Type.NOTCH -> run {
 					val y = if(band.bubble.y.isNaN())
 					{
 						this._bounds.height
@@ -1095,8 +1066,7 @@ class Equalizer : View
 						this._painter
 					)
 				}
-				else ->
-				run {
+				else -> run {
 					canvas.drawCircle(band.bubble.x, band.bubble.y, this._bubbleSize, this._painter)
 					if(!band.isSelected)
 					{

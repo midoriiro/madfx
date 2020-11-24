@@ -1,7 +1,7 @@
-package midoriiro.madfx.audio.equalizers.adapters
+package midoriiro.io.material.equalizer.adapters
 
-import midoriiro.madfx.audio.equalizers.filters.BiQuadraticFilter
-import midoriiro.madfx.audio.equalizers.models.BandFilter
+import midoriiro.io.core.audiofx.effects.BiQuadraticFilter
+import midoriiro.io.material.equalizer.models.BandFilter
 
 class BandFilterAdapter
 {
@@ -13,7 +13,6 @@ class BandFilterAdapter
 		open fun onItemFrequencyChanged(index: Int, frequency: Double){}
 		open fun onItemGainChanged(index: Int, gain: Double){}
 		open fun onItemWidthChanged(index: Int, width: Double){}
-		open fun onItemRateChanged(index: Int, rate: Double){}
 		open fun onItemEnabledChanged(index: Int, state: Boolean){}
 		open fun onItemSelectionChanged(){}
 	}
@@ -31,6 +30,10 @@ class BandFilterAdapter
 
 	fun addListener(listener: Listener)
 	{
+		if(this._listeners.contains(listener))
+		{
+			throw UnsupportedOperationException("listener is already registered")
+		}
 		this._listeners.add(listener)
 	}
 
@@ -38,7 +41,7 @@ class BandFilterAdapter
 	{
 		if(!this._listeners.contains(listener))
 		{
-			return
+			throw UnsupportedOperationException("listener is not registered")
 		}
 		this._listeners.remove(listener)
 	}
@@ -113,12 +116,5 @@ class BandFilterAdapter
 		this.isValidIndexOrThrow(index)
 		this._bands[index].width = width
 		this._listeners.forEach { it.onItemWidthChanged(index, width) }
-	}
-
-	fun setRate(index: Int, rate: Double)
-	{
-		this.isValidIndexOrThrow(index)
-		this._bands[index].rate = rate
-		this._listeners.forEach { it.onItemRateChanged(index, rate) }
 	}
 }

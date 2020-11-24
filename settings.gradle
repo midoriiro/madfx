@@ -1,5 +1,6 @@
 include ':library:core-audiofx'
 include ':library:core'
+include ':library:material:equalizer'
 include ':library:material:knob'
 include ':app'
 rootProject.name = "Mad Fx"
